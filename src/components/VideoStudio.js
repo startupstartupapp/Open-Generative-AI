@@ -453,13 +453,18 @@ export function VideoStudio() {
             const makeModelItem = (m, isV2V = false) => {
                 const item = document.createElement('div');
                 item.className = `flex items-center justify-between p-3.5 hover:bg-white/5 rounded-2xl cursor-pointer transition-all border border-transparent hover:border-white/5 ${selectedModel === m.id ? 'bg-white/5 border-white/5' : ''}`;
-                const iconColor = isV2V ? 'bg-orange-500/10 text-orange-400' : m.id.includes('kling') ? 'bg-blue-500/10 text-blue-400' : m.id.includes('veo') ? 'bg-purple-500/10 text-purple-400' : m.id.includes('sora') ? 'bg-rose-500/10 text-rose-400' : 'bg-primary/10 text-primary';
+                const iconColor = isV2V ? 'bg-orange-500/10 text-orange-400'
+                    : m.family === 'fal' ? 'bg-emerald-500/10 text-emerald-400'
+                    : m.id.includes('kling') ? 'bg-blue-500/10 text-blue-400'
+                    : m.id.includes('veo') ? 'bg-purple-500/10 text-purple-400'
+                    : m.id.includes('sora') ? 'bg-rose-500/10 text-rose-400'
+                    : 'bg-primary/10 text-primary';
                 item.innerHTML = `
                     <div class="flex items-center gap-3.5">
                          <div class="w-10 h-10 ${iconColor} border border-white/5 rounded-xl flex items-center justify-center font-black text-sm shadow-inner uppercase">${m.name.charAt(0)}</div>
                          <div class="flex flex-col gap-0.5">
                             <span class="text-xs font-bold text-white tracking-tight">${m.name}</span>
-                            ${isV2V ? '<span class="text-[9px] text-orange-400/70">Upload a video to use</span>' : ''}
+                            ${isV2V ? '<span class="text-[9px] text-orange-400/70">Upload a video to use</span>' : m.family === 'fal' ? '<span class="text-[9px] text-emerald-400/70 font-semibold">fal.ai</span>' : ''}
                          </div>
                     </div>
                     ${selectedModel === m.id ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9ff00" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
@@ -503,9 +508,20 @@ export function VideoStudio() {
 
                 // Regular generation models (always t2v or i2v, never v2v)
                 const generationModels = imageMode ? i2vModels : t2vModels;
-                const filteredMain = generationModels
-                    .filter(m => m.name.toLowerCase().includes(lf) || m.id.toLowerCase().includes(lf));
-                filteredMain.forEach(m => list.appendChild(makeModelItem(m, false)));
+                const allFiltered = generationModels.filter(m => m.name.toLowerCase().includes(lf) || m.id.toLowerCase().includes(lf));
+
+                const mainModels = allFiltered.filter(m => m.family !== 'fal');
+                const falModels = allFiltered.filter(m => m.family === 'fal');
+
+                mainModels.forEach(m => list.appendChild(makeModelItem(m, false)));
+
+                if (falModels.length > 0) {
+                    const falLabel = document.createElement('div');
+                    falLabel.className = 'text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest px-3 py-2 mt-1 border-t border-white/5';
+                    falLabel.textContent = 'Fal.ai Models';
+                    list.appendChild(falLabel);
+                    falModels.forEach(m => list.appendChild(makeModelItem(m, false)));
+                }
 
                 // Video Tools section
                 const filteredV2V = v2vModels.filter(m => m.name.toLowerCase().includes(lf) || m.id.toLowerCase().includes(lf));

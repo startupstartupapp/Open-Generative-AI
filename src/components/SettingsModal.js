@@ -57,12 +57,19 @@ export function SettingsModal(onClose) {
                     placeholder="Enter your Muapi API key..."
                     value="${localStorage.getItem('muapi_key') || ''}">
             </div>
-            <div>
-                <label style="display:block;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:0.4rem;font-weight:600;">Fal.ai API Key <span style="font-weight:400;color:rgba(255,255,255,0.3);">(required for Fal models)</span></label>
+            <div style="background:rgba(52,211,153,0.05);border:1px solid rgba(52,211,153,0.15);border-radius:0.875rem;padding:0.875rem 1rem;">
+                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;background:rgba(52,211,153,0.15);color:#34d399;font-size:0.6rem;font-weight:900;letter-spacing:0.08em;padding:0.2rem 0.45rem;border-radius:0.35rem;border:1px solid rgba(52,211,153,0.2);text-transform:uppercase;">FAL</span>
+                    <label style="font-size:0.75rem;color:rgba(255,255,255,0.7);font-weight:700;">Fal.ai API Key</label>
+                    <span style="font-size:0.65rem;color:rgba(255,255,255,0.3);font-weight:400;margin-left:auto;">Required for Fal models</span>
+                </div>
                 <input id="settings-fal-key" type="password"
-                    style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:0.75rem;padding:0.6rem 0.9rem;color:#fff;font-size:0.875rem;outline:none;"
+                    style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1px solid rgba(52,211,153,0.2);border-radius:0.75rem;padding:0.6rem 0.9rem;color:#fff;font-size:0.875rem;outline:none;transition:border-color 0.15s;"
                     placeholder="Enter your fal.ai API key..."
                     value="${localStorage.getItem('fal_key') || ''}">
+                <div style="margin-top:0.5rem;font-size:0.65rem;color:rgba(52,211,153,0.5);">
+                    Get your key at <a href="https://fal.ai/dashboard/keys" target="_blank" rel="noopener" style="color:#34d399;text-decoration:underline;text-underline-offset:2px;">fal.ai/dashboard/keys</a>
+                </div>
             </div>
             <p style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin:0;">
                 API keys are stored locally in your browser and only sent to their respective services.

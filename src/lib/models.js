@@ -2142,27 +2142,26 @@ export const t2iModels = [
     "family": "fal",
     "inputs": {
       "prompt": {
-        "type": "string",
-        "title": "Prompt",
-        "name": "prompt",
+        "type": "string", "title": "Prompt", "name": "prompt",
         "description": "Describe the image you want to generate.",
         "examples": ["A photorealistic cat sitting on a windowsill at golden hour"]
       },
       "aspect_ratio": {
-        "type": "string",
-        "title": "Aspect Ratio",
-        "name": "aspect_ratio",
-        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"],
-        "default": "1:1"
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "3:2", "21:9"], "default": "1:1"
       },
       "num_images": {
-        "type": "int",
-        "title": "Number of Images",
-        "name": "num_images",
-        "default": 1,
-        "minValue": 1,
-        "maxValue": 4,
-        "step": 1
+        "type": "int", "title": "Number of Images", "name": "num_images",
+        "default": 1, "minValue": 1, "maxValue": 8, "step": 1
+      },
+      "num_inference_steps": {
+        "type": "int", "title": "Inference Steps", "name": "num_inference_steps",
+        "description": "Number of denoising steps (1–12, faster at lower values).",
+        "default": 4, "minValue": 1, "maxValue": 12, "step": 1
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "jpeg"
       }
     }
   },
@@ -2173,27 +2172,31 @@ export const t2iModels = [
     "family": "fal",
     "inputs": {
       "prompt": {
-        "type": "string",
-        "title": "Prompt",
-        "name": "prompt",
+        "type": "string", "title": "Prompt", "name": "prompt",
         "description": "Describe the image you want to generate.",
         "examples": ["A hyperrealistic portrait of an astronaut on Mars at sunset"]
       },
       "aspect_ratio": {
-        "type": "string",
-        "title": "Aspect Ratio",
-        "name": "aspect_ratio",
-        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"],
-        "default": "1:1"
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "3:2", "21:9"], "default": "1:1"
       },
       "num_images": {
-        "type": "int",
-        "title": "Number of Images",
-        "name": "num_images",
-        "default": 1,
-        "minValue": 1,
-        "maxValue": 4,
-        "step": 1
+        "type": "int", "title": "Number of Images", "name": "num_images",
+        "default": 1, "minValue": 1, "maxValue": 4, "step": 1
+      },
+      "num_inference_steps": {
+        "type": "int", "title": "Inference Steps", "name": "num_inference_steps",
+        "description": "Number of denoising steps (1–50, higher = more detail).",
+        "default": 28, "minValue": 1, "maxValue": 50, "step": 1
+      },
+      "guidance_scale": {
+        "type": "float", "title": "Guidance Scale", "name": "guidance_scale",
+        "description": "How closely to follow the prompt (1–10).",
+        "default": 3.5, "minValue": 1.0, "maxValue": 10.0, "step": 0.5
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "jpeg"
       }
     }
   },
@@ -2204,18 +2207,26 @@ export const t2iModels = [
     "family": "fal",
     "inputs": {
       "prompt": {
-        "type": "string",
-        "title": "Prompt",
-        "name": "prompt",
+        "type": "string", "title": "Prompt", "name": "prompt",
         "description": "Describe the image you want to generate.",
         "examples": ["A cinematic still of a neon-lit Tokyo street at night in the rain"]
       },
       "aspect_ratio": {
-        "type": "string",
-        "title": "Aspect Ratio",
-        "name": "aspect_ratio",
-        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"],
-        "default": "1:1"
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"], "default": "1:1"
+      },
+      "num_images": {
+        "type": "int", "title": "Number of Images", "name": "num_images",
+        "default": 1, "minValue": 1, "maxValue": 4, "step": 1
+      },
+      "safety_tolerance": {
+        "type": "string", "title": "Safety Tolerance", "name": "safety_tolerance",
+        "description": "Content safety level (1 = strictest, 6 = most permissive).",
+        "enum": ["1", "2", "3", "4", "5", "6"], "default": "2"
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "jpeg"
       }
     }
   },
@@ -2226,18 +2237,22 @@ export const t2iModels = [
     "family": "fal",
     "inputs": {
       "prompt": {
-        "type": "string",
-        "title": "Prompt",
-        "name": "prompt",
-        "description": "Describe the edited result you want, optionally referencing a source image.",
-        "examples": ["Make the subject wear a vintage leather jacket while keeping the background"]
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe what to change. You can reference an uploaded image as context.",
+        "examples": ["Make the subject wear a vintage leather jacket, keeping the scene identical"]
       },
       "aspect_ratio": {
-        "type": "string",
-        "title": "Aspect Ratio",
-        "name": "aspect_ratio",
-        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"],
-        "default": "1:1"
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"], "default": "1:1"
+      },
+      "guidance_scale": {
+        "type": "float", "title": "Guidance Scale", "name": "guidance_scale",
+        "description": "How closely to follow the prompt (1–10).",
+        "default": 2.5, "minValue": 1.0, "maxValue": 10.0, "step": 0.5
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "jpeg"
       }
     }
   },
@@ -2248,24 +2263,46 @@ export const t2iModels = [
     "family": "fal",
     "inputs": {
       "prompt": {
-        "type": "string",
-        "title": "Prompt",
-        "name": "prompt",
+        "type": "string", "title": "Prompt", "name": "prompt",
         "description": "Describe the image you want to generate.",
         "examples": ["A minimalist vector illustration of mountain peaks at dawn"]
       },
       "aspect_ratio": {
-        "type": "string",
-        "title": "Aspect Ratio",
-        "name": "aspect_ratio",
-        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"],
-        "default": "1:1"
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"], "default": "1:1"
+      },
+      "style": {
+        "type": "string", "title": "Style", "name": "style",
+        "description": "Visual style of the generated image.",
+        "enum": [
+          "realistic_image",
+          "digital_illustration",
+          "vector_illustration",
+          "realistic_image/b_and_w",
+          "realistic_image/hard_flash",
+          "realistic_image/hdr",
+          "realistic_image/natural_light",
+          "realistic_image/studio_portrait",
+          "digital_illustration/pixel_art",
+          "digital_illustration/hand_drawn",
+          "digital_illustration/grain",
+          "digital_illustration/infantile_sketch",
+          "digital_illustration/2d_art_poster",
+          "digital_illustration/engraving_color",
+          "digital_illustration/flat_air_art"
+        ],
+        "default": "realistic_image"
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "jpeg"
       }
     }
   }
 ];
 
 export const getModelById = (id) => t2iModels.find(m => m.id === id);
+
 
 export const getAspectRatiosForModel = (modelId) => {
   const model = getModelById(modelId);
@@ -2722,25 +2759,20 @@ export const t2vModels = [
     "endpoint": "fal-ai/kling-video/v2/master/text-to-video",
     "family": "fal",
     "inputs": {
-      "prompt": {
-        "type": "string",
-        "title": "Prompt",
-        "name": "prompt",
-        "description": "Describe the video you want to generate."
-      },
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the video scene in detail." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt", "description": "What to exclude from the video." },
       "aspect_ratio": {
-        "type": "string",
-        "title": "Aspect Ratio",
-        "name": "aspect_ratio",
-        "enum": ["16:9", "9:16", "1:1"],
-        "default": "16:9"
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1"], "default": "16:9"
       },
       "duration": {
-        "type": "int",
-        "title": "Duration (seconds)",
-        "name": "duration",
-        "enum": [5, 10],
-        "default": 5
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [5, 10], "default": 5
+      },
+      "cfg_scale": {
+        "type": "float", "title": "CFG Scale", "name": "cfg_scale",
+        "description": "Prompt adherence strength (0–1).",
+        "default": 0.5, "minValue": 0, "maxValue": 1.0, "step": 0.1
       }
     }
   },
@@ -2750,32 +2782,18 @@ export const t2vModels = [
     "endpoint": "bytedance/seedance-2.0/text-to-video",
     "family": "fal",
     "inputs": {
-      "prompt": {
-        "type": "string",
-        "title": "Prompt",
-        "name": "prompt",
-        "description": "Describe the video you want to generate."
-      },
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the video you want to generate." },
       "aspect_ratio": {
-        "type": "string",
-        "title": "Aspect Ratio",
-        "name": "aspect_ratio",
-        "enum": ["16:9", "9:16", "1:1"],
-        "default": "16:9"
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1"], "default": "16:9"
       },
       "resolution": {
-        "type": "string",
-        "title": "Resolution",
-        "name": "resolution",
-        "enum": ["480p", "720p", "1080p"],
-        "default": "720p"
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["480p", "720p", "1080p"], "default": "720p"
       },
       "duration": {
-        "type": "int",
-        "title": "Duration (seconds)",
-        "name": "duration",
-        "enum": [5, 10],
-        "default": 5
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [5, 10], "default": 5
       }
     }
   }
@@ -8250,25 +8268,20 @@ export const i2vModels = [
     "imageField": "image_url",
     "hasPrompt": true,
     "inputs": {
-      "prompt": {
-        "type": "string",
-        "title": "Prompt",
-        "name": "prompt",
-        "description": "Describe the motion or scene to animate."
-      },
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the motion or scene to animate." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt", "description": "What to exclude from the video." },
       "duration": {
-        "type": "int",
-        "title": "Duration (seconds)",
-        "name": "duration",
-        "enum": [5, 10],
-        "default": 5
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [5, 10], "default": 5
       },
       "aspect_ratio": {
-        "type": "string",
-        "title": "Aspect Ratio",
-        "name": "aspect_ratio",
-        "enum": ["16:9", "9:16", "1:1"],
-        "default": "16:9"
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1"], "default": "16:9"
+      },
+      "cfg_scale": {
+        "type": "float", "title": "CFG Scale", "name": "cfg_scale",
+        "description": "Prompt adherence strength (0–1).",
+        "default": 0.5, "minValue": 0, "maxValue": 1.0, "step": 0.1
       }
     }
   },
@@ -8277,28 +8290,14 @@ export const i2vModels = [
     "name": "Fal Kling v3 Pro I2V",
     "endpoint": "fal-ai/kling-video/v3/pro/image-to-video",
     "family": "fal",
-    "imageField": "image_url",
+    "imageField": "start_image_url",
     "hasPrompt": true,
     "inputs": {
-      "prompt": {
-        "type": "string",
-        "title": "Prompt",
-        "name": "prompt",
-        "description": "Describe the motion or scene to animate."
-      },
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the motion or scene to animate." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt", "description": "What to exclude from the video." },
       "duration": {
-        "type": "int",
-        "title": "Duration (seconds)",
-        "name": "duration",
-        "enum": [5, 10],
-        "default": 5
-      },
-      "aspect_ratio": {
-        "type": "string",
-        "title": "Aspect Ratio",
-        "name": "aspect_ratio",
-        "enum": ["16:9", "9:16", "1:1"],
-        "default": "16:9"
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [5, 10], "default": 5
       }
     }
   },
@@ -8310,18 +8309,23 @@ export const i2vModels = [
     "imageField": "image_url",
     "hasPrompt": true,
     "inputs": {
-      "prompt": {
-        "type": "string",
-        "title": "Prompt",
-        "name": "prompt",
-        "description": "Describe the motion or scene to animate."
-      },
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the motion or scene to animate." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt", "description": "What to exclude from the video." },
       "aspect_ratio": {
-        "type": "string",
-        "title": "Aspect Ratio",
-        "name": "aspect_ratio",
-        "enum": ["16:9", "9:16", "1:1"],
-        "default": "16:9"
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1", "4:3", "3:4"], "default": "16:9"
+      },
+      "quality": {
+        "type": "string", "title": "Quality", "name": "quality",
+        "enum": ["360p", "540p", "720p", "1080p"], "default": "720p"
+      },
+      "motion_mode": {
+        "type": "string", "title": "Motion Mode", "name": "motion_mode",
+        "enum": ["normal", "fast"], "default": "normal"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [5, 8], "default": 5
       }
     }
   },

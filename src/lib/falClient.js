@@ -82,10 +82,15 @@ export class FalClient {
         const payload = {
             prompt: params.prompt || '',
             image_size: arToImageSize(params.aspect_ratio),
-            num_images: 1,
+            num_images: params.num_images ?? 1,
         };
         if (params.seed && params.seed !== -1) payload.seed = params.seed;
         if (params.image_url) payload.image_url = params.image_url;
+        if (params.num_inference_steps != null) payload.num_inference_steps = params.num_inference_steps;
+        if (params.guidance_scale != null) payload.guidance_scale = params.guidance_scale;
+        if (params.safety_tolerance != null) payload.safety_tolerance = params.safety_tolerance;
+        if (params.style) payload.style = params.style;
+        if (params.output_format) payload.output_format = params.output_format;
 
         console.log('[Fal] generateImage:', endpoint, payload);
         const submitData = await this._submit(endpoint, payload, falKey);
@@ -142,9 +147,11 @@ export class FalClient {
 
         const payload = {};
         if (params.prompt) payload.prompt = params.prompt;
+        if (params.negative_prompt) payload.negative_prompt = params.negative_prompt;
         if (params.aspect_ratio) payload.aspect_ratio = params.aspect_ratio;
         if (params.duration) payload.duration = params.duration;
         if (params.resolution) payload.resolution = params.resolution;
+        if (params.cfg_scale != null) payload.cfg_scale = params.cfg_scale;
 
         console.log('[Fal] generateVideo:', endpoint, payload);
         const submitData = await this._submit(endpoint, payload, falKey);
@@ -171,6 +178,7 @@ export class FalClient {
         const imageField = modelInfo?.imageField || 'image_url';
         const payload = {};
         if (params.prompt) payload.prompt = params.prompt;
+        if (params.negative_prompt) payload.negative_prompt = params.negative_prompt;
         if (params.image_url) {
             if (imageField === 'images_list') payload.images_list = [params.image_url];
             else payload[imageField] = params.image_url;
@@ -178,6 +186,9 @@ export class FalClient {
         if (params.aspect_ratio) payload.aspect_ratio = params.aspect_ratio;
         if (params.duration) payload.duration = params.duration;
         if (params.resolution) payload.resolution = params.resolution;
+        if (params.cfg_scale != null) payload.cfg_scale = params.cfg_scale;
+        if (params.quality) payload.quality = params.quality;
+        if (params.motion_mode) payload.motion_mode = params.motion_mode;
 
         console.log('[Fal] generateI2V:', endpoint, payload);
         const submitData = await this._submit(endpoint, payload, falKey);
