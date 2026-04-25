@@ -2133,6 +2133,135 @@ export const t2iModels = [
         "step": 1
       }
     }
+  },
+  // ─── fal.ai Text-to-Image ─────────────────────────────────────────────────
+  {
+    "id": "fal-flux-schnell",
+    "name": "Fal FLUX Schnell",
+    "endpoint": "fal-ai/flux/schnell",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string",
+        "title": "Prompt",
+        "name": "prompt",
+        "description": "Describe the image you want to generate.",
+        "examples": ["A photorealistic cat sitting on a windowsill at golden hour"]
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "title": "Aspect Ratio",
+        "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"],
+        "default": "1:1"
+      },
+      "num_images": {
+        "type": "int",
+        "title": "Number of Images",
+        "name": "num_images",
+        "default": 1,
+        "minValue": 1,
+        "maxValue": 4,
+        "step": 1
+      }
+    }
+  },
+  {
+    "id": "fal-flux-dev",
+    "name": "Fal FLUX Dev",
+    "endpoint": "fal-ai/flux/dev",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string",
+        "title": "Prompt",
+        "name": "prompt",
+        "description": "Describe the image you want to generate.",
+        "examples": ["A hyperrealistic portrait of an astronaut on Mars at sunset"]
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "title": "Aspect Ratio",
+        "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"],
+        "default": "1:1"
+      },
+      "num_images": {
+        "type": "int",
+        "title": "Number of Images",
+        "name": "num_images",
+        "default": 1,
+        "minValue": 1,
+        "maxValue": 4,
+        "step": 1
+      }
+    }
+  },
+  {
+    "id": "fal-flux-pro",
+    "name": "Fal FLUX Pro",
+    "endpoint": "fal-ai/flux-pro/v1.1",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string",
+        "title": "Prompt",
+        "name": "prompt",
+        "description": "Describe the image you want to generate.",
+        "examples": ["A cinematic still of a neon-lit Tokyo street at night in the rain"]
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "title": "Aspect Ratio",
+        "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"],
+        "default": "1:1"
+      }
+    }
+  },
+  {
+    "id": "fal-flux-kontext-pro",
+    "name": "Fal FLUX Kontext Pro",
+    "endpoint": "fal-ai/flux-pro/kontext",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string",
+        "title": "Prompt",
+        "name": "prompt",
+        "description": "Describe the edited result you want, optionally referencing a source image.",
+        "examples": ["Make the subject wear a vintage leather jacket while keeping the background"]
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "title": "Aspect Ratio",
+        "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"],
+        "default": "1:1"
+      }
+    }
+  },
+  {
+    "id": "fal-recraft-v3",
+    "name": "Fal Recraft V3",
+    "endpoint": "fal-ai/recraft/v3/text-to-image",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string",
+        "title": "Prompt",
+        "name": "prompt",
+        "description": "Describe the image you want to generate.",
+        "examples": ["A minimalist vector illustration of mountain peaks at dawn"]
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "title": "Aspect Ratio",
+        "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"],
+        "default": "1:1"
+      }
+    }
   }
 ];
 
@@ -2556,6 +2685,98 @@ export const t2vModels = [
       "aspect_ratio": { "enum": ["16:9", "9:16"], "title": "Aspect Ratio", "name": "aspect_ratio", "type": "string", "description": "The aspect ratio of the generated video", "default": "16:9" },
       "duration": { "title": "Duration", "name": "duration", "type": "int", "description": "The duration of the generated video in seconds", "default": 5 },
       "resolution": { "enum": ["480p", "720p", "1080p"], "title": "Resolution", "name": "resolution", "type": "string", "description": "The resolution of the generated video.", "default": "720p" }
+    }
+  },
+  // ─── fal.ai Text-to-Video ─────────────────────────────────────────────────
+  {
+    "id": "fal-veo3",
+    "name": "Fal Veo 3",
+    "endpoint": "fal-ai/veo3",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string",
+        "title": "Prompt",
+        "name": "prompt",
+        "description": "Describe the video you want to generate. Veo 3 supports native audio generation."
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "title": "Aspect Ratio",
+        "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1"],
+        "default": "16:9"
+      },
+      "duration": {
+        "type": "int",
+        "title": "Duration (seconds)",
+        "name": "duration",
+        "enum": [5, 8],
+        "default": 5
+      }
+    }
+  },
+  {
+    "id": "fal-kling-v2-master-t2v",
+    "name": "Fal Kling v2 Master",
+    "endpoint": "fal-ai/kling-video/v2/master/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string",
+        "title": "Prompt",
+        "name": "prompt",
+        "description": "Describe the video you want to generate."
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "title": "Aspect Ratio",
+        "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1"],
+        "default": "16:9"
+      },
+      "duration": {
+        "type": "int",
+        "title": "Duration (seconds)",
+        "name": "duration",
+        "enum": [5, 10],
+        "default": 5
+      }
+    }
+  },
+  {
+    "id": "fal-seedance-v2-t2v",
+    "name": "Fal Seedance 2.0",
+    "endpoint": "bytedance/seedance-2.0/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string",
+        "title": "Prompt",
+        "name": "prompt",
+        "description": "Describe the video you want to generate."
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "title": "Aspect Ratio",
+        "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1"],
+        "default": "16:9"
+      },
+      "resolution": {
+        "type": "string",
+        "title": "Resolution",
+        "name": "resolution",
+        "enum": ["480p", "720p", "1080p"],
+        "default": "720p"
+      },
+      "duration": {
+        "type": "int",
+        "title": "Duration (seconds)",
+        "name": "duration",
+        "enum": [5, 10],
+        "default": 5
+      }
     }
   }
 ];
@@ -8019,6 +8240,127 @@ export const i2vModels = [
         "default": "basic"
       }
     }
+  },
+  // ─── fal.ai Image-to-Video ────────────────────────────────────────────────
+  {
+    "id": "fal-kling-v1-6-pro-i2v",
+    "name": "Fal Kling v1.6 Pro I2V",
+    "endpoint": "fal-ai/kling-video/v1.6/pro/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": {
+        "type": "string",
+        "title": "Prompt",
+        "name": "prompt",
+        "description": "Describe the motion or scene to animate."
+      },
+      "duration": {
+        "type": "int",
+        "title": "Duration (seconds)",
+        "name": "duration",
+        "enum": [5, 10],
+        "default": 5
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "title": "Aspect Ratio",
+        "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1"],
+        "default": "16:9"
+      }
+    }
+  },
+  {
+    "id": "fal-kling-v3-pro-i2v",
+    "name": "Fal Kling v3 Pro I2V",
+    "endpoint": "fal-ai/kling-video/v3/pro/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": {
+        "type": "string",
+        "title": "Prompt",
+        "name": "prompt",
+        "description": "Describe the motion or scene to animate."
+      },
+      "duration": {
+        "type": "int",
+        "title": "Duration (seconds)",
+        "name": "duration",
+        "enum": [5, 10],
+        "default": 5
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "title": "Aspect Ratio",
+        "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1"],
+        "default": "16:9"
+      }
+    }
+  },
+  {
+    "id": "fal-pixverse-v6-i2v",
+    "name": "Fal PixVerse v6 I2V",
+    "endpoint": "fal-ai/pixverse/v6/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": {
+        "type": "string",
+        "title": "Prompt",
+        "name": "prompt",
+        "description": "Describe the motion or scene to animate."
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "title": "Aspect Ratio",
+        "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1"],
+        "default": "16:9"
+      }
+    }
+  },
+  {
+    "id": "fal-seedance-v2-i2v",
+    "name": "Fal Seedance 2.0 I2V",
+    "endpoint": "bytedance/seedance-2.0/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": {
+        "type": "string",
+        "title": "Prompt",
+        "name": "prompt",
+        "description": "Describe the motion to apply to the image."
+      },
+      "aspect_ratio": {
+        "type": "string",
+        "title": "Aspect Ratio",
+        "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1"],
+        "default": "16:9"
+      },
+      "resolution": {
+        "type": "string",
+        "title": "Resolution",
+        "name": "resolution",
+        "enum": ["480p", "720p", "1080p"],
+        "default": "720p"
+      },
+      "duration": {
+        "type": "int",
+        "title": "Duration (seconds)",
+        "name": "duration",
+        "enum": [5, 10],
+        "default": 5
+      }
+    }
   }
 ];
 
@@ -8286,6 +8628,16 @@ export const lipsyncModels = [
         "default": "480p"
       }
     }
+  },
+  // ─── fal.ai LipSync ───────────────────────────────────────────────────────
+  {
+    "id": "fal-sync-lipsync-v3",
+    "name": "Fal Sync Lipsync v3",
+    "endpoint": "fal-ai/sync-lipsync/v3",
+    "family": "fal",
+    "category": "video",
+    "hasPrompt": false,
+    "description": "High-quality video lipsync driven by audio using Sync Labs v3 via fal.ai."
   }
 ];
 

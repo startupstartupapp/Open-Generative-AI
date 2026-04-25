@@ -57,8 +57,15 @@ export function SettingsModal(onClose) {
                     placeholder="Enter your Muapi API key..."
                     value="${localStorage.getItem('muapi_key') || ''}">
             </div>
+            <div>
+                <label style="display:block;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-bottom:0.4rem;font-weight:600;">Fal.ai API Key <span style="font-weight:400;color:rgba(255,255,255,0.3);">(required for Fal models)</span></label>
+                <input id="settings-fal-key" type="password"
+                    style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:0.75rem;padding:0.6rem 0.9rem;color:#fff;font-size:0.875rem;outline:none;"
+                    placeholder="Enter your fal.ai API key..."
+                    value="${localStorage.getItem('fal_key') || ''}">
+            </div>
             <p style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin:0;">
-                Your API key is stored locally and never sent anywhere except api.muapi.ai.
+                API keys are stored locally in your browser and only sent to their respective services.
             </p>
             <div style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:0.5rem;">
                 <button id="settings-cancel-btn" style="padding:0.5rem 1rem;border-radius:0.5rem;background:none;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);font-size:0.75rem;font-weight:700;cursor:pointer;">Cancel</button>
@@ -101,12 +108,20 @@ export function SettingsModal(onClose) {
     apiPanel.querySelector('#settings-cancel-btn').onclick = close;
     apiPanel.querySelector('#settings-save-btn').onclick = () => {
         const key = apiPanel.querySelector('#settings-api-key').value.trim();
+        const falKey = apiPanel.querySelector('#settings-fal-key').value.trim();
         if (key) {
             localStorage.setItem('muapi_key', key);
-            close();
-        } else {
-            alert('Please enter a valid API key.');
         }
+        if (falKey) {
+            localStorage.setItem('fal_key', falKey);
+        } else {
+            localStorage.removeItem('fal_key');
+        }
+        if (!key) {
+            alert('Please enter a valid Muapi API key.');
+            return;
+        }
+        close();
     };
 
     header.querySelector('#settings-close-btn').onclick = close;

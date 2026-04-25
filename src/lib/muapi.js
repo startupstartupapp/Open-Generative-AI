@@ -1,4 +1,5 @@
 import { getModelById, getVideoModelById, getI2IModelById, getI2VModelById, getV2VModelById, getLipSyncModelById } from './models.js';
+import { falClient } from './falClient.js';
 
 export class MuapiClient {
     constructor() {
@@ -25,10 +26,12 @@ export class MuapiClient {
      * @param {string} [params.image_url] - If present, treats as Image-to-Image
      */
     async generateImage(params) {
+        const modelInfo = getModelById(params.model);
+        if (modelInfo?.family === 'fal') return falClient.generateImage(params);
+
         const key = this.getKey();
 
         // Resolve endpoint from model definition
-        const modelInfo = getModelById(params.model);
         const endpoint = modelInfo?.endpoint || params.model;
         const url = `${this.baseUrl}/api/v1/${endpoint}`;
 
@@ -169,9 +172,10 @@ export class MuapiClient {
     }
 
     async generateVideo(params) {
-        const key = this.getKey();
-
         const modelInfo = getVideoModelById(params.model);
+        if (modelInfo?.family === 'fal') return falClient.generateVideo(params);
+
+        const key = this.getKey();
         const endpoint = modelInfo?.endpoint || params.model;
         const url = `${this.baseUrl}/api/v1/${endpoint}`;
 
@@ -237,8 +241,10 @@ export class MuapiClient {
      * @param {string} [params.resolution]
      */
     async generateI2I(params) {
-        const key = this.getKey();
         const modelInfo = getI2IModelById(params.model);
+        if (modelInfo?.family === 'fal') return falClient.generateI2I(params);
+
+        const key = this.getKey();
         const endpoint = modelInfo?.endpoint || params.model;
         const url = `${this.baseUrl}/api/v1/${endpoint}`;
 
@@ -307,8 +313,10 @@ export class MuapiClient {
      * @param {string} [params.quality]
      */
     async generateI2V(params) {
-        const key = this.getKey();
         const modelInfo = getI2VModelById(params.model);
+        if (modelInfo?.family === 'fal') return falClient.generateI2V(params);
+
+        const key = this.getKey();
         const endpoint = modelInfo?.endpoint || params.model;
         const url = `${this.baseUrl}/api/v1/${endpoint}`;
 
@@ -461,8 +469,10 @@ export class MuapiClient {
      * @param {Function} [params.onRequestId] - Called when request_id is received
      */
     async processLipSync(params) {
-        const key = this.getKey();
         const modelInfo = getLipSyncModelById(params.model);
+        if (modelInfo?.family === 'fal') return falClient.processLipSync(params);
+
+        const key = this.getKey();
         const endpoint = modelInfo?.endpoint || params.model;
         const url = `${this.baseUrl}/api/v1/${endpoint}`;
 
