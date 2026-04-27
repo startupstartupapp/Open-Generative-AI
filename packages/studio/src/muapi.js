@@ -125,9 +125,13 @@ export async function generateImage(apiKey, params) {
         if (!falKey) throw new Error('Fal.ai API Key missing. Please add it in Settings.');
         const payload = {
             prompt: params.prompt || '',
-            image_size: arToImageSize(params.aspect_ratio),
             num_images: params.num_images ?? 1,
         };
+        if (modelInfo?.usesAspectRatioString) {
+            if (params.aspect_ratio) payload.aspect_ratio = params.aspect_ratio;
+        } else {
+            payload.image_size = arToImageSize(params.aspect_ratio);
+        }
         if (params.seed && params.seed !== -1) payload.seed = params.seed;
         if (params.image_url) payload.image_url = params.image_url;
         if (params.negative_prompt) payload.negative_prompt = params.negative_prompt;

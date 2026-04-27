@@ -2304,6 +2304,7 @@ export const t2iModels = [
     "name": "Fal Nano Banana 2",
     "endpoint": "fal-ai/nano-banana-2",
     "family": "fal",
+    "usesAspectRatioString": true,
     "inputs": {
       "prompt": {
         "type": "string", "title": "Prompt", "name": "prompt",
@@ -2338,6 +2339,7 @@ export const t2iModels = [
     "name": "Fal Qwen Image",
     "endpoint": "fal-ai/qwen-image",
     "family": "fal",
+    "usesAspectRatioString": true,
     "inputs": {
       "prompt": {
         "type": "string", "title": "Prompt", "name": "prompt",
