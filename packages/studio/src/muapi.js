@@ -140,6 +140,8 @@ export async function generateImage(apiKey, params) {
         if (params.safety_tolerance != null) payload.safety_tolerance = params.safety_tolerance;
         if (params.resolution) payload.resolution = params.resolution;
         if (params.style) payload.style = params.style;
+        if (params.style_type) payload.style_type = params.style_type;
+        if (params.quality) payload.quality = params.quality;
         if (params.output_format) payload.output_format = params.output_format;
         const result = await falSubmitAndPoll(modelInfo.endpoint, payload, falKey, params.onRequestId, 60, 2000);
         const imageUrl = result.images?.[0]?.url || result.data?.images?.[0]?.url;
