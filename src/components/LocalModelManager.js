@@ -152,8 +152,100 @@ function AuxRow(label, auxKey, initStatus, onStateChange) {
     return row;
 }
 
+// ─── Wan2GP Server Config ────────────────────────────────────────────────────
+function Wan2gpConfigBar(onChange) {
+    const wrap = document.createElement('div');
+    wrap.className = 'flex flex-col gap-3 p-3 rounded-xl bg-white/3 border border-white/5';
+    wrap.innerHTML = `
+        <div class="flex flex-col gap-0.5">
+            <span class="text-xs font-bold text-white">Wan2GP server (optional)</span>
+            <span class="text-[11px] text-muted leading-relaxed">
+                Run <a href="https://github.com/deepbeepmeep/Wan2GP" target="_blank" class="text-primary hover:underline">Wan2GP</a>
+                on a CUDA box (<code class="text-primary/80">python wgp.py --listen --server-name 0.0.0.0</code>) to unlock video models from this UI.
+            </span>
+        </div>
+        <div class="flex items-center gap-2">
+            <input id="wan2gp-url" type="text" placeholder="http://127.0.0.1:7860"
+                   class="flex-1 bg-white/5 border border-white/5 focus:border-primary/40 rounded-lg px-3 py-1.5 text-xs text-white placeholder-white/30 focus:outline-none"/>
+            <button id="wan2gp-test" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30 transition-all">Test</button>
+            <button id="wan2gp-save" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-primary text-black hover:shadow-glow transition-all">Save</button>
+        </div>
+        <div id="wan2gp-status" class="text-[11px] text-muted">Not configured</div>
+    `;
+
+    const input = wrap.querySelector('#wan2gp-url');
+    const testBtn = wrap.querySelector('#wan2gp-test');
+    const saveBtn = wrap.querySelector('#wan2gp-save');
+    const statusEl = wrap.querySelector('#wan2gp-status');
+    const setStatus = (text, kind = 'muted') => {
+        const colorMap = { muted: 'text-muted', ok: 'text-green-400', warn: 'text-yellow-400', err: 'text-red-400' };
+        statusEl.className = `text-[11px] ${colorMap[kind] || colorMap.muted}`;
+        statusEl.textContent = text;
+    };
+
+    (async () => {
+        const cfg = await localAI.getWan2gpConfig();
+        if (cfg.url) {
+            input.value = cfg.url;
+            const r = await localAI.probeWan2gp(cfg.url);
+            setStatus(r.ok ? `Connected · Gradio ${r.version}` : `Saved URL not reachable: ${r.error}`, r.ok ? 'ok' : 'warn');
+        } else {
+            setStatus('Not configured (Wan2GP models will appear offline)', 'muted');
+        }
+    })();
+
+    testBtn.onclick = async () => {
+        const url = input.value.trim();
+        if (!url) { setStatus('Enter a URL first', 'warn'); return; }
+        setStatus('Probing...', 'muted');
+        testBtn.disabled = true;
+        try {
+            const r = await localAI.probeWan2gp(url);
+            setStatus(r.ok ? `Reachable · Gradio ${r.version}` : `Unreachable: ${r.error}`, r.ok ? 'ok' : 'err');
+        } finally { testBtn.disabled = false; }
+    };
+
+    saveBtn.onclick = async () => {
+        const url = input.value.trim();
+        saveBtn.disabled = true;
+        try {
+            await localAI.setWan2gpUrl(url);
+            const r = url ? await localAI.probeWan2gp(url) : { ok: false, error: 'cleared' };
+            setStatus(r.ok ? `Saved · Connected to Gradio ${r.version}` : (url ? `Saved, not reachable: ${r.error}` : 'Cleared'), r.ok ? 'ok' : 'warn');
+            onChange?.();
+        } finally { saveBtn.disabled = false; }
+    };
+
+    return wrap;
+}
+
 // ─── Model Card ───────────────────────────────────────────────────────────────
+function Wan2gpModelCard(model) {
+    const card = document.createElement('div');
+    card.className = 'flex items-start justify-between gap-3 p-4 rounded-xl border border-white/5 bg-white/3';
+    const ready = !!model.ready;
+    card.innerHTML = `
+        <div class="flex flex-col gap-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-sm font-bold text-white truncate">${model.name}</span>
+                ${ready ? `<span class="text-green-400">${CheckIcon}</span>` : ''}
+            </div>
+            <p class="text-[11px] text-muted leading-relaxed">${model.description}</p>
+            <div class="flex items-center gap-1.5 flex-wrap mt-1">
+                <span class="px-1.5 py-0.5 rounded-md text-[10px] font-bold ${model.type === 'video' ? 'bg-purple-500/15 text-purple-300' : 'bg-primary/10 text-primary'}">${model.type.toUpperCase()}</span>
+                <span class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-white/5 text-muted">via Wan2GP</span>
+                ${(model.tags || []).filter(t => !['featured', 'remote'].includes(t)).map(t => `<span class="px-1.5 py-0.5 rounded-md text-[10px] font-bold bg-white/5 text-muted">${t}</span>`).join('')}
+            </div>
+        </div>
+        <div class="shrink-0">
+            <span class="text-[10px] font-bold ${ready ? 'text-green-400' : 'text-yellow-400'}">${ready ? 'Available' : 'Server offline'}</span>
+        </div>
+    `;
+    return card;
+}
+
 function ModelCard(model, onStateChange) {
+    if (model.provider === 'wan2gp') return Wan2gpModelCard(model);
     const card = document.createElement('div');
     card.className = 'flex flex-col gap-3 p-4 rounded-xl border border-white/5 bg-white/3 hover:border-white/10 transition-all';
 
@@ -267,6 +359,9 @@ export function LocalModelManager() {
     let binaryReady = false;
     const binaryBar = BinaryStatusBar((ready) => { binaryReady = ready; });
     engineSection.appendChild(binaryBar);
+
+    const wan2gpBar = Wan2gpConfigBar(() => renderModels());
+    engineSection.appendChild(wan2gpBar);
     root.appendChild(engineSection);
 
     // ── Section: models

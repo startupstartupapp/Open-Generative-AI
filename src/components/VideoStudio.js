@@ -3,13 +3,36 @@ import { t2vModels, getAspectRatiosForVideoModel, getDurationsForModel, getResol
 import { AuthModal } from './AuthModal.js';
 import { createUploadPicker } from './UploadPicker.js';
 import { savePendingJob, removePendingJob, getPendingJobs } from '../lib/pendingJobs.js';
+import { localAI, isLocalAIAvailable } from '../lib/localInferenceClient.js';
+import { isWan2gpModelId, getLocalModelById, localT2VModels, localI2VModels } from '../lib/localModels.js';
+
+// Promotes a wan2gp catalog entry (lib/localModels.js shape) into the
+// `inputs`-shaped descriptor the Video Studio dropdowns/controls expect.
+const adaptLocalToVideoEntry = (m) => ({
+    id: m.id,
+    name: m.name,
+    provider: 'wan2gp',
+    inputs: {
+        prompt: { type: 'string', name: 'prompt', title: 'Prompt' },
+        aspect_ratio: { type: 'string', name: 'aspect_ratio', enum: m.aspectRatios || ['16:9', '1:1', '9:16'], default: (m.aspectRatios || ['16:9'])[0] },
+    },
+});
 
 export function VideoStudio() {
     const container = document.createElement('div');
     container.className = 'w-full h-full flex flex-col items-center justify-center bg-app-bg relative p-4 md:p-6 overflow-y-auto custom-scrollbar overflow-x-hidden';
 
+    // Merge Wan2GP video models in only when running inside Electron AND the
+    // user has a Wan2GP server configured. We can't probe synchronously, so
+    // we always include them when isLocalAIAvailable() — getCurrentModel()
+    // reads from these arrays, so they need to be present from init.
+    const localT2V = isLocalAIAvailable() ? localT2VModels.map(adaptLocalToVideoEntry) : [];
+    const localI2V = isLocalAIAvailable() ? localI2VModels.map(adaptLocalToVideoEntry) : [];
+    const allT2V = [...t2vModels, ...localT2V];
+    const allI2V = [...i2vModels, ...localI2V];
+
     // --- State ---
-    const defaultModel = t2vModels[0];
+    const defaultModel = allT2V[0];
     let selectedModel = defaultModel.id;
     let selectedModelName = defaultModel.name;
     let selectedAr = defaultModel.inputs?.aspect_ratio?.default || '16:9';
@@ -26,10 +49,22 @@ export function VideoStudio() {
     let v2vMode = false;   // true = video-to-video tools mode
     let uploadedVideoUrl = null;
 
-    const getCurrentModels = () => v2vMode ? v2vModels : (imageMode ? i2vModels : t2vModels);
-    const getCurrentAspectRatios = (id) => imageMode ? getAspectRatiosForI2VModel(id) : getAspectRatiosForVideoModel(id);
-    const getCurrentDurations = (id) => imageMode ? getDurationsForI2VModel(id) : getDurationsForModel(id);
-    const getCurrentResolutions = (id) => imageMode ? getResolutionsForI2VModel(id) : getResolutionsForVideoModel(id);
+    const getCurrentModels = () => v2vMode ? v2vModels : (imageMode ? allI2V : allT2V);
+    // Local Wan2GP entries don't live in the Muapi-derived helpers, so we
+    // resolve aspect ratios off the catalog when the selected id is local.
+    const getCurrentAspectRatios = (id) => {
+        const local = getLocalModelById(id);
+        if (local) return local.aspectRatios || ['16:9', '1:1', '9:16'];
+        return imageMode ? getAspectRatiosForI2VModel(id) : getAspectRatiosForVideoModel(id);
+    };
+    const getCurrentDurations = (id) => {
+        if (getLocalModelById(id)) return [];
+        return imageMode ? getDurationsForI2VModel(id) : getDurationsForModel(id);
+    };
+    const getCurrentResolutions = (id) => {
+        if (getLocalModelById(id)) return [];
+        return imageMode ? getResolutionsForI2VModel(id) : getResolutionsForVideoModel(id);
+    };
     const getCurrentModes = (id) => getModesForModel(id);
     const getCurrentModel = () => getCurrentModels().find(m => m.id === selectedModel);
     const getQualitiesForModel = (id) => {
@@ -94,8 +129,8 @@ export function VideoStudio() {
             }
             if (!imageMode) {
                 imageMode = true;
-                selectedModel = i2vModels[0].id;
-                selectedModelName = i2vModels[0].name;
+                selectedModel = allI2V[0].id;
+                selectedModelName = allI2V[0].name;
                 document.getElementById('v-model-btn-label').textContent = selectedModelName;
                 updateControlsForModel(selectedModel);
             }
@@ -105,13 +140,17 @@ export function VideoStudio() {
         onClear: () => {
             uploadedImageUrl = null;
             imageMode = false;
-            selectedModel = t2vModels[0].id;
-            selectedModelName = t2vModels[0].name;
+            selectedModel = allT2V[0].id;
+            selectedModelName = allT2V[0].name;
             document.getElementById('v-model-btn-label').textContent = selectedModelName;
             updateControlsForModel(selectedModel);
             textarea.placeholder = 'Describe the video you want to create';
             textarea.disabled = false;
-        }
+        },
+        // Route the upload through the configured Wan2GP server when the active
+        // model is local; otherwise fall back to the Muapi-hosted upload.
+        uploadFn: (file) => isWan2gpModelId(selectedModel) ? localAI.uploadFileToWan2gp(file) : muapi.uploadFile(file),
+        requireApiKey: () => !isWan2gpModelId(selectedModel),
     });
     topRow.appendChild(picker.trigger);
     container.appendChild(picker.panel);
@@ -172,8 +211,8 @@ export function VideoStudio() {
         uploadedVideoUrl = null;
         v2vMode = false;
         showVideoIcon();
-        selectedModel = t2vModels[0].id;
-        selectedModelName = t2vModels[0].name;
+        selectedModel = allT2V[0].id;
+        selectedModelName = allT2V[0].name;
         document.getElementById('v-model-btn-label').textContent = selectedModelName;
         updateControlsForModel(selectedModel);
         textarea.placeholder = 'Describe the video you want to create';
@@ -507,7 +546,7 @@ export function VideoStudio() {
                 const lf = filter.toLowerCase();
 
                 // Regular generation models (always t2v or i2v, never v2v)
-                const generationModels = imageMode ? i2vModels : t2vModels;
+                const generationModels = imageMode ? allI2V : allT2V;
                 const allFiltered = generationModels.filter(m => m.name.toLowerCase().includes(lf) || m.id.toLowerCase().includes(lf));
 
                 const mainModels = allFiltered.filter(m => m.family !== 'fal');
@@ -942,8 +981,8 @@ export function VideoStudio() {
         uploadedVideoUrl = null;
         v2vMode = false;
         showVideoIcon();
-        selectedModel = t2vModels[0].id;
-        selectedModelName = t2vModels[0].name;
+        selectedModel = allT2V[0].id;
+        selectedModelName = allT2V[0].name;
         document.getElementById('v-model-btn-label').textContent = selectedModelName;
         updateControlsForModel(selectedModel);
         textarea.placeholder = 'Describe the video you want to create';
@@ -996,15 +1035,29 @@ export function VideoStudio() {
             }
         }
 
-        const apiKey = localStorage.getItem('muapi_key');
-        if (!apiKey) {
-            AuthModal(() => generateBtn.click());
-            return;
+        const isLocal = isWan2gpModelId(selectedModel);
+
+        // Local Wan2GP generations don't go through Muapi — skip the auth gate.
+        if (!isLocal) {
+            const apiKey = localStorage.getItem('muapi_key');
+            if (!apiKey) {
+                AuthModal(() => generateBtn.click());
+                return;
+            }
         }
 
         hero.classList.add('opacity-0', 'scale-95', '-translate-y-10', 'pointer-events-none');
         generateBtn.disabled = true;
         generateBtn.innerHTML = `<span class="animate-spin inline-block mr-2 text-black">◌</span> Generating...`;
+
+        // For local generations, surface step progress in the button label.
+        let unsubscribeProgress = null;
+        if (isLocal) {
+            unsubscribeProgress = localAI.onProgress(({ status, progress }) => {
+                const pct = typeof progress === 'number' ? Math.round(progress * 100) : null;
+                generateBtn.innerHTML = `<span class="animate-spin inline-block mr-2 text-black">◌</span> ${status || 'Generating'}${pct != null ? ` ${pct}%` : '…'}`;
+            });
+        }
 
         let hadError = false;
         let capturedRequestId = null;
@@ -1016,6 +1069,32 @@ export function VideoStudio() {
         };
 
         try {
+            // ─── Local Wan2GP path ───────────────────────────────────────────
+            // Uploaded image URLs were minted by uploadFileToWan2gp(), so
+            // wan2gpProvider can rehydrate the Gradio file descriptor.
+            if (isLocal) {
+                const localParams = {
+                    model: selectedModel,
+                    prompt: prompt || '',
+                    aspect_ratio: selectedAr,
+                };
+                if (imageMode && uploadedImageUrl) localParams.image = uploadedImageUrl;
+                const res = await localAI.generate(localParams);
+                console.log('[VideoStudio] Local response:', res);
+                if (res && res.url) {
+                    const genId = Date.now().toString();
+                    lastGenerationId = null;
+                    lastGenerationModel = null;
+                    addToHistory({ id: genId, url: res.url, prompt, model: selectedModel, aspect_ratio: selectedAr, timestamp: new Date().toISOString() });
+                    showVideoInCanvas(res.url, selectedModel);
+                } else {
+                    throw new Error('No video URL returned by Wan2GP');
+                }
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = `Generate ✨`;
+                return;
+            }
+
             if (v2vMode) {
                 const res = await muapi.processV2V({ model: selectedModel, video_url: uploadedVideoUrl, onRequestId });
                 console.log('[VideoStudio] V2V response:', res);
@@ -1135,6 +1214,7 @@ export function VideoStudio() {
             }, 4000);
         } finally {
             generateBtn.disabled = false;
+            if (typeof unsubscribeProgress === 'function') unsubscribeProgress();
             // Only reset the label on success; the catch timeout handles the error case
             if (!hadError) generateBtn.innerHTML = `Generate ✨`;
         }

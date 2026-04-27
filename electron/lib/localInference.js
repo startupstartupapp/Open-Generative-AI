@@ -25,19 +25,58 @@ const activeDownloads = new Map(); // modelId → request object
 
 // ─── GitHub release asset matcher per platform ───────────────────────────────
 // Asset names look like: sd-master-44cca3d-bin-Darwin-macOS-15.7.4-arm64.zip
-// Returns a predicate that returns true when the asset name matches this platform.
-function getBinaryAssetMatcher() {
+// We pick the best match in priority order so a single release that only
+// ships e.g. avx512 still resolves cleanly.
+function pickBinaryAsset(zipNames) {
     const { platform, arch } = process;
+
+    // The "cudart" zip in recent leejet releases is just the CUDA runtime DLLs,
+    // not an sd-cli build, so it must never satisfy the Windows match.
+    const isSdCliZip = (n) => n.startsWith('sd-master-') || n.includes('-bin-');
+    const candidates = zipNames.filter(isSdCliZip);
+
     if (platform === 'darwin') {
-        const archToken = arch === 'arm64' ? 'arm64' : 'x86_64';
-        return (name) => name.includes('Darwin') && name.includes(archToken);
+        // leejet only publishes arm64 macOS builds. Mac Intel must use the
+        // hosted API instead — caller maps the empty result to a clear error.
+        if (arch !== 'arm64') return null;
+        return candidates.find(n => n.includes('Darwin') && n.includes('arm64')) || null;
     }
     if (platform === 'win32') {
-        // Prefer avx2 (best balance); fall back to noavx
-        return (name) => name.includes('win-avx2-x64') || name.includes('win-noavx-x64');
+        // Priority: avx2 > avx > avx512 > noavx > cuda12. cuda needs the
+        // separate cudart runtime so we only fall back to it if nothing else.
+        const winCandidates = candidates.filter(n => /win-(avx2?|avx512|noavx|cuda12|cu12)-x64/.test(n));
+        const order = ['win-avx2-x64', 'win-avx-x64', 'win-avx512-x64', 'win-noavx-x64', 'win-cuda12-x64', 'win-cu12-x64'];
+        for (const tag of order) {
+            const hit = winCandidates.find(n => n.includes(tag));
+            if (hit) return hit;
+        }
+        return null;
     }
-    // Linux: prefer plain build over rocm/vulkan
-    return (name) => name.includes('Linux') && name.includes('x86_64') && !name.includes('rocm') && !name.includes('vulkan');
+    // Linux: prefer plain x86_64, then vulkan, then rocm.
+    const linuxCandidates = candidates.filter(n => n.includes('Linux') && n.includes('x86_64'));
+    const plain = linuxCandidates.find(n => !n.includes('rocm') && !n.includes('vulkan'));
+    return plain
+        || linuxCandidates.find(n => n.includes('vulkan'))
+        || linuxCandidates.find(n => n.includes('rocm'))
+        || null;
+}
+
+function fetchJson(url) {
+    return new Promise((resolve, reject) => {
+        https.get(url, { headers: { 'User-Agent': 'open-generative-ai' } }, (res) => {
+            if (res.statusCode !== 200) {
+                res.resume();
+                reject(new Error(`HTTP ${res.statusCode} from ${url}`));
+                return;
+            }
+            let body = '';
+            res.on('data', (d) => { body += d; });
+            res.on('end', () => {
+                try { resolve(JSON.parse(body)); } catch (e) { reject(e); }
+            });
+            res.on('error', reject);
+        }).on('error', reject);
+    });
 }
 
 // ─── Robust HTTPS download with redirect-following, range-resume, and retry ───
@@ -177,30 +216,36 @@ async function downloadBinary(mainWindow) {
             downloadUrl = customUrl;
             zipName = path.basename(customUrl);
         } else {
-            const releaseData = await new Promise((resolve, reject) => {
-                https.get(
-                    'https://api.github.com/repos/leejet/stable-diffusion.cpp/releases/latest',
-                    { headers: { 'User-Agent': 'open-generative-ai' } },
-                    (res) => {
-                        let body = '';
-                        res.on('data', (d) => { body += d; });
-                        res.on('end', () => {
-                            try { resolve(JSON.parse(body)); } catch (e) { reject(e); }
-                        });
-                        res.on('error', reject);
-                    }
-                ).on('error', reject);
-            });
+            // Walk recent releases until we find one that actually ships a
+            // build for this platform. leejet sometimes publishes a partial
+            // release (e.g. master-587 ships only Mac arm64 + Linux ROCm),
+            // so the very latest tag isn't always usable.
+            const releases = await fetchJson(
+                'https://api.github.com/repos/leejet/stable-diffusion.cpp/releases?per_page=15'
+            );
 
-            const matches = getBinaryAssetMatcher();
-            const allZips = releaseData.assets?.filter(a => a.name.endsWith('.zip')) || [];
-            const asset = allZips.find(a => matches(a.name));
-            if (!asset) {
-                const available = allZips.map(a => a.name).join(', ');
-                throw new Error(`No binary found for this platform. Available: ${available}`);
+            let chosen = null;
+            let lastSeen = [];
+            for (const release of releases) {
+                const zips = (release.assets || [])
+                    .filter(a => a.name.endsWith('.zip'));
+                lastSeen = zips.map(a => a.name);
+                const pickedName = pickBinaryAsset(lastSeen);
+                if (pickedName) {
+                    chosen = zips.find(a => a.name === pickedName);
+                    break;
+                }
             }
-            downloadUrl = asset.browser_download_url;
-            zipName = asset.name;
+
+            if (!chosen) {
+                if (process.platform === 'darwin' && process.arch !== 'arm64') {
+                    throw new Error('Local inference on macOS only supports Apple Silicon (M1/M2/M3/M4). Mac Intel is not supported by stable-diffusion.cpp upstream.');
+                }
+                const available = lastSeen.join(', ') || '(none)';
+                throw new Error(`No binary found for ${process.platform}-${process.arch} in the last 15 releases. Latest release assets: ${available}`);
+            }
+            downloadUrl = chosen.browser_download_url;
+            zipName = chosen.name;
         }
 
         send({ phase: 'downloading', progress: 0 });

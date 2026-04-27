@@ -35,9 +35,12 @@ export function ImageStudio() {
     let uploadedImageUrls = []; // array of uploaded image URLs (multi-image support)
     let imageMode = false; // false = t2i models, true = i2i models
 
-    // Local inference state
+    // Local inference state — only image-capable models surface here.
+    // sd.cpp uses type='sd1'|'sdxl'|'z-image'; Wan2GP image models use type='image'.
+    // Wan2GP video models (type='video') are hidden from ImageStudio.
+    const LOCAL_IMAGE_MODELS = LOCAL_MODEL_CATALOG.filter(m => m.type !== 'video');
     let useLocalModel = false;
-    let selectedLocalModel = LOCAL_MODEL_CATALOG[0]?.id || null;
+    let selectedLocalModel = LOCAL_IMAGE_MODELS[0]?.id || null;
     let localGenProgress = 0; // 0–1
 
     // Advanced parameters state
@@ -728,8 +731,8 @@ export function ImageStudio() {
                 list.innerHTML = '';
 
                 if (useLocalModel) {
-                    // ── Local model list ──────────────────────────────────────
-                    const filtered = LOCAL_MODEL_CATALOG.filter(m =>
+                    // ── Local model list (Wan2GP image-capable models only) ───
+                    const filtered = LOCAL_IMAGE_MODELS.filter(m =>
                         m.name.toLowerCase().includes(filter.toLowerCase()) ||
                         m.id.toLowerCase().includes(filter.toLowerCase())
                     );
@@ -748,7 +751,7 @@ export function ImageStudio() {
                                         <span class="text-xs font-bold text-white tracking-tight">${m.name}</span>
                                         ${m.featured ? '<span class="text-[9px] font-black px-1 py-0.5 rounded bg-primary/20 text-primary">FEATURED</span>' : ''}
                                     </div>
-                                    <span class="text-[10px] text-muted">${m.sizeGB} GB · ${m.type.toUpperCase()}</span>
+                                    <span class="text-[10px] text-muted">${m.type.toUpperCase()} · ${m.family}</span>
                                 </div>
                             </div>
                             ${selectedLocalModel === m.id ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9ff00" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
@@ -1198,11 +1201,11 @@ export function ImageStudio() {
             progressWrap.classList.remove('hidden');
             progressWrap.classList.add('flex');
 
-            const unsub = localAI.onProgress(({ step, totalSteps, progress, status }) => {
-                const pct = Math.round((progress || (step / totalSteps)) * 100);
+            const unsub = localAI.onProgress(({ progress, status }) => {
+                const pct = Math.round((progress ?? 0) * 100);
                 if (progressFill) progressFill.style.width = `${pct}%`;
-                if (progressPct) progressPct.textContent = `${pct}%`;
-                generateBtn.innerHTML = `<span class="animate-spin inline-block mr-2 text-black">◌</span> ${pct}%`;
+                if (progressPct) progressPct.textContent = status === 'starting' ? 'Starting...' : `${pct}%`;
+                generateBtn.innerHTML = `<span class="animate-spin inline-block mr-2 text-black">◌</span> ${status === 'starting' ? '...' : pct + '%'}`;
             });
 
             let hadError = false;
@@ -1220,20 +1223,20 @@ export function ImageStudio() {
                 progressWrap.classList.replace('flex', 'hidden');
                 progressWrap.classList.add('hidden');
 
-                if (res?.url) {
-                    addToHistory({
-                        id: Date.now().toString(),
-                        url: res.url,
-                        prompt,
-                        model: `local:${selectedLocalModel}`,
-                        aspect_ratio: selectedAr,
-                        seed: res.seed,
-                        timestamp: new Date().toISOString()
-                    });
-                    showImageInCanvas(res.url);
-                } else {
-                    throw new Error('No image returned from local generation');
+                if (!res?.url) throw new Error('No output returned from local generation');
+                if (res.mediaType === 'video') {
+                    throw new Error('This model produces video — use the Video studio instead.');
                 }
+                addToHistory({
+                    id: Date.now().toString(),
+                    url: res.url,
+                    prompt,
+                    model: `local:${selectedLocalModel}`,
+                    aspect_ratio: selectedAr,
+                    seed: res.seed,
+                    timestamp: new Date().toISOString()
+                });
+                showImageInCanvas(res.url);
             } catch (e) {
                 hadError = true;
                 unsub();
