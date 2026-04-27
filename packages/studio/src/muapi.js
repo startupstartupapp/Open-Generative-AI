@@ -200,6 +200,8 @@ export async function generateVideo(apiKey, params) {
         if (params.duration) payload.duration = params.duration;
         if (params.resolution) payload.resolution = params.resolution;
         if (params.cfg_scale != null) payload.cfg_scale = params.cfg_scale;
+        if (params.generate_audio != null) payload.generate_audio = params.generate_audio;
+        if (params.seed && params.seed !== -1) payload.seed = params.seed;
         const result = await falSubmitAndPoll(modelInfo.endpoint, payload, falKey, params.onRequestId, 900, 3000);
         const videoUrl = result.video?.url || result.data?.video?.url;
         return { ...result, url: videoUrl };
@@ -276,6 +278,7 @@ export async function processLipSync(apiKey, params) {
         if (params.audio_url) payload.audio_url = params.audio_url;
         if (params.image_url) payload.image_url = params.image_url;
         if (params.video_url) payload.video_url = params.video_url;
+        if (params.sync_mode) payload.sync_mode = params.sync_mode;
         const result = await falSubmitAndPoll(modelInfo.endpoint, payload, falKey, params.onRequestId, 900, 3000);
         const videoUrl = result.video?.url || result.data?.video?.url;
         return { ...result, url: videoUrl };

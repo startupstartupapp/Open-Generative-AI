@@ -2731,24 +2731,25 @@ export const t2vModels = [
     "family": "fal",
     "inputs": {
       "prompt": {
-        "type": "string",
-        "title": "Prompt",
-        "name": "prompt",
+        "type": "string", "title": "Prompt", "name": "prompt",
         "description": "Describe the video you want to generate. Veo 3 supports native audio generation."
       },
+      "negative_prompt": {
+        "type": "string", "title": "Negative Prompt", "name": "negative_prompt",
+        "description": "What to avoid in the generated video."
+      },
       "aspect_ratio": {
-        "type": "string",
-        "title": "Aspect Ratio",
-        "name": "aspect_ratio",
-        "enum": ["16:9", "9:16", "1:1"],
-        "default": "16:9"
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1", "auto"], "default": "16:9"
       },
       "duration": {
-        "type": "int",
-        "title": "Duration (seconds)",
-        "name": "duration",
-        "enum": [5, 8],
-        "default": 5
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [4, 6, 8], "default": 8
+      },
+      "generate_audio": {
+        "type": "bool", "title": "Generate Audio", "name": "generate_audio",
+        "description": "Whether to generate native audio with the video.",
+        "default": true
       }
     }
   },
@@ -2781,32 +2782,18 @@ export const t2vModels = [
     "endpoint": "bytedance/seedance-2.0/text-to-video",
     "family": "fal",
     "inputs": {
-      "prompt": {
-        "type": "string",
-        "title": "Prompt",
-        "name": "prompt",
-        "description": "Describe the video you want to generate."
-      },
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the video you want to generate." },
       "aspect_ratio": {
-        "type": "string",
-        "title": "Aspect Ratio",
-        "name": "aspect_ratio",
-        "enum": ["16:9", "9:16", "1:1"],
-        "default": "16:9"
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1", "4:3", "3:4", "21:9"], "default": "16:9"
       },
       "resolution": {
-        "type": "string",
-        "title": "Resolution",
-        "name": "resolution",
-        "enum": ["480p", "720p", "1080p"],
-        "default": "720p"
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["480p", "720p"], "default": "720p"
       },
       "duration": {
-        "type": "int",
-        "title": "Duration (seconds)",
-        "name": "duration",
-        "enum": [5, 10],
-        "default": 5
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [5, 10], "default": 5
       }
     }
   }
@@ -8351,24 +8338,16 @@ export const i2vModels = [
     "hasPrompt": true,
     "inputs": {
       "prompt": {
-        "type": "string",
-        "title": "Prompt",
-        "name": "prompt",
+        "type": "string", "title": "Prompt", "name": "prompt",
         "description": "Describe the motion to apply to the image."
       },
       "aspect_ratio": {
-        "type": "string",
-        "title": "Aspect Ratio",
-        "name": "aspect_ratio",
-        "enum": ["16:9", "9:16", "1:1"],
-        "default": "16:9"
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1", "4:3", "3:4", "21:9"], "default": "16:9"
       },
       "resolution": {
-        "type": "string",
-        "title": "Resolution",
-        "name": "resolution",
-        "enum": ["480p", "720p", "1080p"],
-        "default": "720p"
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["480p", "720p"], "default": "720p"
       },
       "duration": {
         "type": "int",
@@ -8654,7 +8633,15 @@ export const lipsyncModels = [
     "family": "fal",
     "category": "video",
     "hasPrompt": false,
-    "description": "High-quality video lipsync driven by audio using Sync Labs v3 via fal.ai."
+    "description": "High-quality video lipsync driven by audio using Sync Labs v3 via fal.ai.",
+    "inputs": {
+      "sync_mode": {
+        "type": "string", "title": "Sync Mode", "name": "sync_mode",
+        "description": "How to handle video/audio length mismatches.",
+        "enum": ["cut_off", "loop", "bounce", "remap", "silence"],
+        "default": "cut_off"
+      }
+    }
   }
 ];
 
