@@ -2298,6 +2298,72 @@ export const t2iModels = [
         "enum": ["jpeg", "png"], "default": "jpeg"
       }
     }
+  },
+  {
+    "id": "fal-nano-banana-2",
+    "name": "Fal Nano Banana 2",
+    "endpoint": "fal-ai/nano-banana-2",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the image you want to generate.",
+        "examples": ["A serene mountain landscape at golden hour, ultra-detailed"]
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"], "default": "1:1"
+      },
+      "num_images": {
+        "type": "int", "title": "Number of Images", "name": "num_images",
+        "default": 1, "minValue": 1, "maxValue": 4, "step": 1
+      },
+      "resolution": {
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["1K", "2K", "4K"], "default": "1K"
+      },
+      "safety_tolerance": {
+        "type": "string", "title": "Safety Tolerance", "name": "safety_tolerance",
+        "enum": ["1", "2", "3", "4", "5", "6"], "default": "2"
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "jpeg"
+      }
+    }
+  },
+  {
+    "id": "fal-qwen-image",
+    "name": "Fal Qwen Image",
+    "endpoint": "fal-ai/qwen-image",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the image you want to generate.",
+        "examples": ["A vibrant cyberpunk cityscape at night with neon reflections"]
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"], "default": "1:1"
+      },
+      "num_images": {
+        "type": "int", "title": "Number of Images", "name": "num_images",
+        "default": 1, "minValue": 1, "maxValue": 4, "step": 1
+      },
+      "num_inference_steps": {
+        "type": "int", "title": "Inference Steps", "name": "num_inference_steps",
+        "default": 30, "minValue": 1, "maxValue": 50, "step": 1
+      },
+      "guidance_scale": {
+        "type": "float", "title": "Guidance Scale", "name": "guidance_scale",
+        "default": 4.0, "minValue": 1.0, "maxValue": 10.0, "step": 0.5
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "jpeg"
+      }
+    }
   }
 ];
 
@@ -2794,6 +2860,87 @@ export const t2vModels = [
       "duration": {
         "type": "int", "title": "Duration (seconds)", "name": "duration",
         "enum": [5, 10], "default": 5
+      }
+    }
+  },
+  {
+    "id": "fal-veo3-1",
+    "name": "Fal Veo 3.1",
+    "endpoint": "fal-ai/veo3.1",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the video. Veo 3.1 supports synchronized audio."
+      },
+      "negative_prompt": {
+        "type": "string", "title": "Negative Prompt", "name": "negative_prompt",
+        "description": "What to avoid in the video."
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1", "auto"], "default": "16:9"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [4, 6, 8], "default": 8
+      },
+      "resolution": {
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["720p", "1080p"], "default": "720p"
+      },
+      "generate_audio": {
+        "type": "bool", "title": "Generate Audio", "name": "generate_audio",
+        "description": "Whether to generate native audio with the video.",
+        "default": true
+      }
+    }
+  },
+  {
+    "id": "fal-sora-2-t2v",
+    "name": "Fal Sora 2",
+    "endpoint": "fal-ai/sora-2/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the video. Sora 2 produces cinematic motion with synced audio."
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16"], "default": "16:9"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [4, 8, 12], "default": 4
+      },
+      "resolution": {
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["720p"], "default": "720p"
+      }
+    }
+  },
+  {
+    "id": "fal-sora-2-pro-t2v",
+    "name": "Fal Sora 2 Pro",
+    "endpoint": "fal-ai/sora-2/text-to-video/pro",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Premium 1080p Sora 2 with extended duration and synced audio."
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16"], "default": "16:9"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [4, 8, 12], "default": 8
+      },
+      "resolution": {
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["720p", "1080p"], "default": "1080p"
       }
     }
   }
@@ -8355,6 +8502,62 @@ export const i2vModels = [
         "name": "duration",
         "enum": [5, 10],
         "default": 5
+      }
+    }
+  },
+  {
+    "id": "fal-veo3-1-i2v",
+    "name": "Fal Veo 3.1 I2V",
+    "endpoint": "fal-ai/veo3.1/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the motion or scene to animate."
+      },
+      "negative_prompt": {
+        "type": "string", "title": "Negative Prompt", "name": "negative_prompt",
+        "description": "What to avoid in the video."
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "auto"], "default": "auto"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [4, 6, 8], "default": 8
+      },
+      "resolution": {
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["720p", "1080p"], "default": "720p"
+      },
+      "generate_audio": {
+        "type": "bool", "title": "Generate Audio", "name": "generate_audio",
+        "default": true
+      }
+    }
+  },
+  {
+    "id": "fal-kling-v3-4k-i2v",
+    "name": "Fal Kling v3 4K I2V",
+    "endpoint": "fal-ai/kling-video/v3/4k/image-to-video",
+    "family": "fal",
+    "imageField": "start_image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the motion. 4K cinematic output via Kling v3."
+      },
+      "negative_prompt": {
+        "type": "string", "title": "Negative Prompt", "name": "negative_prompt",
+        "description": "What to exclude from the video."
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [5, 10], "default": 5
       }
     }
   }
