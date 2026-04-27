@@ -4,15 +4,15 @@
 
 > 🐎 **Early access to Happy Horse 1.0** — Alibaba's #1 ranked AI video model. Check out [Awesome HappyHorse 1.0 API & Prompts](https://github.com/Anil-matcha/Awesome-HappyHorse-1.0-API-and-Prompt) — a Python wrapper plus a curated library of high-performing community prompts for native 1080p text-to-video and image-to-video generation with jointly generated audio.
 
-> 💡 **Looking for GPT-Image-2 prompts?** Check out [Awesome GPT-Image-2 API Prompts](https://github.com/Anil-matcha/Awesome-GPT-Image-2-API-Prompts) — a curated collection of 40+ ready-to-use prompts for the OpenAI `gpt-image-2` API covering portraits, posters, UI mockups, game screenshots, and more.
-
 > 🤖 **Automate Higgsfield, Freepik, Krea, Openart & more with AI coding agents:** [Generative-Media-Skills](https://github.com/SamurAIGPT/Generative-Media-Skills) — a library of skills that let agents like **Claude Code**, **Codex**, and other coding assistants drive 200+ image/video models end-to-end (prompt → generate → edit → stitch) directly from your terminal. Perfect for building automated media pipelines without touching a UI.
 
 ### Related projects
 
 > **Open-source Weavy, Flora Fauna Freepik Spaces, Krea nodes alternative** -> https://github.com/SamurAIGPT/Vibe-Workflow
 
-> **Open-source multi-modal chatbot and Poe alternative** -> https://github.com/Anil-matcha/Open-Poe-AI 
+> **Open-source multi-modal chatbot and Poe alternative** -> https://github.com/Anil-matcha/Open-Poe-AI
+
+> **Open-source Opus Clip alternative — turn any long-form YouTube video into viral-ready vertical shorts** -> https://github.com/SamurAIGPT/AI-Youtube-Shorts-Generator
 
 ## 🌐 Try it Online — No Install Required
 
@@ -34,10 +34,10 @@ One-click installers — no Node.js or terminal required.
 
 | Platform | Download |
 |---|---|
-| macOS Apple Silicon (M1/M2/M3/M4) | [Open Generative AI-1.0.2-arm64.dmg](https://github.com/Anil-matcha/Open-Generative-AI/releases/download/v1.0.2/Open.Generative.AI-1.0.2-arm64.dmg) |
-| macOS Intel (x64) | [Open Generative AI-1.0.2.dmg](https://github.com/Anil-matcha/Open-Generative-AI/releases/download/v1.0.2/Open.Generative.AI-1.0.2.dmg) |
-| Windows (x64 + ARM64) | [Open Generative AI Setup 1.0.2.exe](https://github.com/Anil-matcha/Open-Generative-AI/releases/download/v1.0.2/Open.Generative.AI.Setup.1.0.2.exe) |
-| Linux (Ubuntu x64) | Build locally with `npm run electron:build:linux` |
+| macOS Apple Silicon (M1/M2/M3/M4) | [Open Generative AI-1.0.9-arm64.dmg](https://github.com/Anil-matcha/Open-Generative-AI/releases/download/v1.0.9/Open.Generative.AI-1.0.9-arm64.dmg) |
+| macOS Intel (x64) | [Open Generative AI-1.0.9.dmg](https://github.com/Anil-matcha/Open-Generative-AI/releases/download/v1.0.9/Open.Generative.AI-1.0.9.dmg) |
+| Windows (x64) | [Open Generative AI Setup 1.0.9.exe](https://github.com/Anil-matcha/Open-Generative-AI/releases/download/v1.0.9/Open.Generative.AI.Setup.1.0.9.exe) |
+| Linux (Ubuntu x64) | [v1.0.9 release](https://github.com/Anil-matcha/Open-Generative-AI/releases/tag/v1.0.9) (`.AppImage` / `.deb`), or build locally with `npm run electron:build:linux`. |
 
 All releases: [github.com/Anil-matcha/Open-Generative-AI/releases](https://github.com/Anil-matcha/Open-Generative-AI/releases)
 
@@ -132,15 +132,22 @@ For a deep dive into the technical architecture and the philosophy behind the "I
 
 ## ⚡ Local Model Inference (Desktop App Only)
 
-The desktop app includes a built-in **local generation engine** powered by [stable-diffusion.cpp](https://github.com/leejet/stable-diffusion.cpp) — generate images entirely on your own machine with no API key and no internet connection required.
+The desktop app supports **two independent local engines**. Pick whichever fits the machine you actually run on:
 
-### Supported Local Models
+| Engine | What it is | Best for |
+|---|---|---|
+| **sd.cpp** (bundled) | C++ engine from [stable-diffusion.cpp](https://github.com/leejet/stable-diffusion.cpp), runs on the same machine as the app. Metal GPU on Apple Silicon, CUDA/Vulkan/ROCm on Linux/Windows. | Image-only models. Works on Mac M-series. |
+| **Wan2GP** (BYO server) | HTTP client to a user-run [Wan2GP](https://github.com/deepbeepmeep/Wan2GP) server. The server runs Python + PyTorch on a CUDA/ROCm GPU; the desktop app only sends prompts and receives results. | Video models (Wan 2.2, Hunyuan, LTX) and large image models (Flux, Qwen-Image). NVIDIA/AMD GPU required on the *server*; the desktop app itself can run on a Mac. |
 
-| Model | Type | Size | Speed |
+Both engines share the same UI: open **Settings → Local Models** to configure each.
+
+### Engine 1 — sd.cpp (bundled)
+
+| Model | Type | Size | Notes |
 |---|---|---|---|
-| **Z-Image Turbo** ⚡ | Diffusion Transformer | 2.5 GB + 2.7 GB aux | 8-step turbo |
-| **Z-Image Base** ⚡ | Diffusion Transformer | 3.5 GB + 2.7 GB aux | 50-step high-quality |
-| **Dreamshaper 8** | SD 1.5 | 2.1 GB | 20-step versatile |
+| **Z-Image Turbo** ⚡ | Diffusion Transformer | 2.5 GB + 2.7 GB aux | 8-step turbo. Heavy on memory. |
+| **Z-Image Base** ⚡ | Diffusion Transformer | 3.5 GB + 2.7 GB aux | 50-step high-quality. Heavy on memory. |
+| **Dreamshaper 8** | SD 1.5 | 2.1 GB | 20-step versatile. Lightest tested option on Mac. |
 | **Realistic Vision v5.1** | SD 1.5 | 2.1 GB | 25-step photorealistic |
 | **Anything v5** | SD 1.5 | 2.1 GB | 20-step anime/illustration |
 | **SDXL Base 1.0** | SDXL | 6.9 GB | 30-step high-res |
@@ -149,8 +156,7 @@ The desktop app includes a built-in **local generation engine** powered by [stab
 > - **Qwen3-4B Text Encoder** — 2.4 GB
 > - **FLUX VAE** — 335 MB
 
-### How to Use Local Models
-
+**How to use:**
 1. Open **Settings → Local Models** in the desktop app
 2. Install the **sd.cpp inference engine** (one click — auto-downloaded)
 3. Download your chosen model (and auxiliary files for Z-Image)
@@ -159,21 +165,71 @@ The desktop app includes a built-in **local generation engine** powered by [stab
 
 All downloads happen inside the app. Nothing is installed system-wide.
 
+### Engine 2 — Wan2GP (remote Gradio server)
+
+The app does **not** bundle Python or model weights for Wan2GP. You run Wan2GP yourself on a machine with a CUDA or ROCm GPU and point the desktop app at its URL.
+
+```bash
+# On your GPU machine
+git clone https://github.com/deepbeepmeep/Wan2GP
+cd Wan2GP
+./install.sh                          # or install.bat on Windows
+python wgp.py --listen --server-name 0.0.0.0   # binds to all interfaces
+```
+
+Then in the desktop app: **Settings → Local Models → Wan2GP server**, paste the URL (e.g. `http://192.168.1.42:7860`), click **Test**, then **Save**. The Wan2GP models become available — image models in **Image Studio**, video models reachable via the same generation API (Image Studio rejects video output explicitly; full Video Studio wiring is on the roadmap).
+
+| Model | Type | Notes |
+|---|---|---|
+| **Flux.1 Dev** | Image | 1024px, 28 steps |
+| **Qwen Image** | Image | 1024px, 30 steps |
+| **Wan 2.2 (T2V / I2V)** | Video | Slow on consumer GPUs |
+| **Hunyuan Video** | Video | High-quality T2V |
+| **LTX Video** | Video | Fastest video option |
+
+> **Why a separate server?** Wan2GP's runtime (Sage attention, flash-attn, AWQ/GGUF kernels) is CUDA-only — there is no MPS / Apple Silicon path. Treating it as a remote server lets a Mac-only user keep the desktop app while offloading inference to a Linux/Windows GPU box, a gaming PC on the LAN, or a rented RunPod/vast.ai instance.
+
 > **Local inference is only available in the desktop app.** The hosted web version always uses cloud APIs.
 
 ### Hardware Notes
 
-- Runs on CPU (all platforms) and **Metal GPU** (macOS Apple Silicon — M1/M2/M3/M4)
-- Metal GPU acceleration is built into the macOS desktop binary — significantly faster than CPU-only
-- Recommended: 16 GB RAM for Z-Image models (7.4 GB weights + 2.4 GB compute buffer)
-- The system may slow during generation — the process uses all available CPU cores while running
+- **sd.cpp** runs on CPU (all platforms) and **Metal GPU** on Apple Silicon (M1/M2/M3/M4); CUDA/Vulkan/ROCm on Linux/Windows.
+- Metal GPU acceleration is built into the macOS desktop binary — significantly faster than CPU-only.
+- Recommended for sd.cpp Z-Image: 16 GB RAM (7.4 GB weights + 2.4 GB compute buffer). On a base 8 GB M-series Mac, **Z-Image is known to hang the system** — stick to SD 1.5 there.
+- For SD 1.5 on M2: expect ~1–2 s/step with the Metal dylib active. If you see ~10 s/step instead, the binary may have fallen back to CPU — see verification below.
+
+### Verifying the SD 1.5 path (the fastest sanity test on Mac)
+
+If you want to confirm sd.cpp is installed correctly without going through the UI, you can drive `sd-cli` directly. This is the same binary the app uses.
+
+```bash
+# 1. App data layout (created on first app launch)
+APP_DATA="$HOME/Library/Application Support/open-generative-ai/local-ai"
+ls "$APP_DATA/bin"     # sd-cli, libstable-diffusion.dylib
+ls "$APP_DATA/models"  # whatever you've downloaded
+
+# 2. Grab a small SD 1.5 model directly (Dreamshaper 8, ~2 GB)
+curl -L --fail --progress-bar \
+  -o "$APP_DATA/models/DreamShaper_8_pruned.safetensors" \
+  "https://huggingface.co/Lykon/DreamShaper/resolve/main/DreamShaper_8_pruned.safetensors"
+
+# 3. Run a single 512x512 / 12-step inference
+DYLD_LIBRARY_PATH="$APP_DATA/bin" "$APP_DATA/bin/sd-cli" \
+  -m "$APP_DATA/models/DreamShaper_8_pruned.safetensors" \
+  -p "a serene mountain lake at sunrise, oil painting" \
+  -o /tmp/sd15-test.png \
+  --steps 12 -H 512 -W 512 --cfg-scale 7.5 --seed 42 \
+  --sampling-method euler_a
+```
+
+A healthy run on Apple Silicon prints `total params memory size = 1969.78MB (VRAM 1969.78MB, RAM 0.00MB)` (Metal-backed) and produces a coherent 512×512 PNG. If `VRAM` is `0.00MB` instead, the dylib is CPU-only — check `otool -L "$APP_DATA/bin/libstable-diffusion.dylib" | grep -i metal` and reinstall the engine from **Settings → Local Models** if Metal is missing.
 
 ---
 
 ## ✨ Features
 
 - **Image Studio** — Generate images from text prompts (50+ text-to-image models) or transform existing images (55+ image-to-image models). Switches model set automatically based on whether a reference image is provided. Quality and resolution controls visible for models that support them.
-- **Local Inference** — Generate images on-device with no API key using Z-Image Turbo/Base, Dreamshaper, Realistic Vision, Anything v5, or SDXL — powered by stable-diffusion.cpp with Metal GPU acceleration on Apple Silicon.
+- **Local Inference** — Two engines: **sd.cpp** (bundled, runs on Mac/Win/Linux with Metal/CUDA/Vulkan/ROCm) for SD 1.5, SDXL, and Z-Image; and **Wan2GP** (BYO Gradio server) for Flux, Qwen-Image, and video models (Wan 2.2, Hunyuan, LTX). Configure both in Settings → Local Models.
 - **Multi-Image Input** — Upload up to 14 reference images for compatible edit models (Nano Banana 2 Edit, Flux Kontext Dev, GPT-4o Edit, and more). Multi-select picker with order badges, batch upload, and a "Use Selected" confirmation flow.
 - **Video Studio** — Generate videos from text prompts (40+ text-to-video models) or animate a start-frame image (60+ image-to-video models). Same intelligent mode switching as Image Studio.
 - **Lip Sync Studio** — Animate portrait images or sync lips on existing videos using audio. 9 dedicated models across two modes: portrait image + audio → talking video, and video + audio → lipsync video.
@@ -336,9 +392,12 @@ Every image you upload is saved locally (URL + thumbnail) so you never upload th
 ### Setup
 
 ```bash
-# Clone the repository
-git clone https://github.com/Anil-matcha/Open-Generative-AI.git
+# Clone the repository (with submodules — required for the workflow + agent packages)
+git clone --recurse-submodules https://github.com/Anil-matcha/Open-Generative-AI.git
 cd Open-Generative-AI
+
+# If you already cloned without --recurse-submodules, run this once:
+# git submodule update --init --recursive
 
 # Install dependencies (installs root + packages/studio workspace)
 npm install

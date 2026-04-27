@@ -57,8 +57,22 @@ export function SettingsModal(onClose) {
                     placeholder="Enter your Muapi API key..."
                     value="${localStorage.getItem('muapi_key') || ''}">
             </div>
+            <div style="background:rgba(52,211,153,0.05);border:1px solid rgba(52,211,153,0.15);border-radius:0.875rem;padding:0.875rem 1rem;">
+                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.6rem;">
+                    <span style="display:inline-flex;align-items:center;justify-content:center;background:rgba(52,211,153,0.15);color:#34d399;font-size:0.6rem;font-weight:900;letter-spacing:0.08em;padding:0.2rem 0.45rem;border-radius:0.35rem;border:1px solid rgba(52,211,153,0.2);text-transform:uppercase;">FAL</span>
+                    <label style="font-size:0.75rem;color:rgba(255,255,255,0.7);font-weight:700;">Fal.ai API Key</label>
+                    <span style="font-size:0.65rem;color:rgba(255,255,255,0.3);font-weight:400;margin-left:auto;">Required for Fal models</span>
+                </div>
+                <input id="settings-fal-key" type="password"
+                    style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.05);border:1px solid rgba(52,211,153,0.2);border-radius:0.75rem;padding:0.6rem 0.9rem;color:#fff;font-size:0.875rem;outline:none;transition:border-color 0.15s;"
+                    placeholder="Enter your fal.ai API key..."
+                    value="${localStorage.getItem('fal_key') || ''}">
+                <div style="margin-top:0.5rem;font-size:0.65rem;color:rgba(52,211,153,0.5);">
+                    Get your key at <a href="https://fal.ai/dashboard/keys" target="_blank" rel="noopener" style="color:#34d399;text-decoration:underline;text-underline-offset:2px;">fal.ai/dashboard/keys</a>
+                </div>
+            </div>
             <p style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin:0;">
-                Your API key is stored locally and never sent anywhere except api.muapi.ai.
+                API keys are stored locally in your browser and only sent to their respective services.
             </p>
             <div style="display:flex;justify-content:flex-end;gap:0.5rem;margin-top:0.5rem;">
                 <button id="settings-cancel-btn" style="padding:0.5rem 1rem;border-radius:0.5rem;background:none;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);font-size:0.75rem;font-weight:700;cursor:pointer;">Cancel</button>
@@ -101,12 +115,20 @@ export function SettingsModal(onClose) {
     apiPanel.querySelector('#settings-cancel-btn').onclick = close;
     apiPanel.querySelector('#settings-save-btn').onclick = () => {
         const key = apiPanel.querySelector('#settings-api-key').value.trim();
+        const falKey = apiPanel.querySelector('#settings-fal-key').value.trim();
         if (key) {
             localStorage.setItem('muapi_key', key);
-            close();
-        } else {
-            alert('Please enter a valid API key.');
         }
+        if (falKey) {
+            localStorage.setItem('fal_key', falKey);
+        } else {
+            localStorage.removeItem('fal_key');
+        }
+        if (!key) {
+            alert('Please enter a valid Muapi API key.');
+            return;
+        }
+        close();
     };
 
     header.querySelector('#settings-close-btn').onclick = close;

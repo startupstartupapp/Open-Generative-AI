@@ -329,11 +329,23 @@ export function LipSyncStudio() {
         dropdown.innerHTML = '';
         if (type === 'model') {
             const models = getCurrentModels();
-            models.forEach(m => {
-                const item = document.createElement('button');
-                item.type = 'button';
-                item.className = `w-full text-left px-4 py-2.5 rounded-xl text-sm transition-all hover:bg-white/10 ${m.id === selectedModel ? 'text-primary font-bold bg-primary/5' : 'text-white font-medium'}`;
-                item.innerHTML = `<div>${m.name}</div><div class="text-xs text-muted mt-0.5">${m.description?.slice(0, 60)}...</div>`;
+            const mainModels = models.filter(m => m.family !== 'fal');
+            const falModels = models.filter(m => m.family === 'fal');
+
+            const makeModelItem = (m) => {
+                const iconColor = m.family === 'fal' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-primary/10 text-primary';
+                const item = document.createElement('div');
+                item.className = `flex items-center justify-between p-3.5 hover:bg-white/5 rounded-2xl cursor-pointer transition-all border border-transparent hover:border-white/5 ${m.id === selectedModel ? 'bg-white/5 border-white/5' : ''}`;
+                item.innerHTML = `
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 ${iconColor} border border-white/5 rounded-xl flex items-center justify-center font-black text-sm shadow-inner uppercase">${m.name.charAt(0)}</div>
+                        <div class="flex flex-col gap-0.5">
+                            <span class="text-xs font-bold text-white tracking-tight">${m.name}</span>
+                            ${m.family === 'fal' ? '<span class="text-[9px] text-emerald-400/70 font-semibold">fal.ai</span>' : ''}
+                        </div>
+                    </div>
+                    ${m.id === selectedModel ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9ff00" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+                `;
                 item.onclick = () => {
                     selectedModel = m.id;
                     document.getElementById('ls-model-btn-label').textContent = m.name;
@@ -348,8 +360,18 @@ export function LipSyncStudio() {
                     textarea.style.display = m.hasPrompt ? '' : 'none';
                     closeDropdown();
                 };
-                dropdown.appendChild(item);
-            });
+                return item;
+            };
+
+            mainModels.forEach(m => dropdown.appendChild(makeModelItem(m)));
+
+            if (falModels.length > 0) {
+                const sectionLabel = document.createElement('div');
+                sectionLabel.className = 'text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest px-3 py-2 mt-1 border-t border-white/5';
+                sectionLabel.textContent = 'Fal.ai Models';
+                dropdown.appendChild(sectionLabel);
+                falModels.forEach(m => dropdown.appendChild(makeModelItem(m)));
+            }
         } else if (type === 'resolution') {
             const resolutions = getResolutionsForLipSyncModel(selectedModel);
             resolutions.forEach(r => {

@@ -35,9 +35,12 @@ export function ImageStudio() {
     let uploadedImageUrls = []; // array of uploaded image URLs (multi-image support)
     let imageMode = false; // false = t2i models, true = i2i models
 
-    // Local inference state
+    // Local inference state — only image-capable models surface here.
+    // sd.cpp uses type='sd1'|'sdxl'|'z-image'; Wan2GP image models use type='image'.
+    // Wan2GP video models (type='video') are hidden from ImageStudio.
+    const LOCAL_IMAGE_MODELS = LOCAL_MODEL_CATALOG.filter(m => m.type !== 'video');
     let useLocalModel = false;
-    let selectedLocalModel = LOCAL_MODEL_CATALOG[0]?.id || null;
+    let selectedLocalModel = LOCAL_IMAGE_MODELS[0]?.id || null;
     let localGenProgress = 0; // 0–1
 
     // Advanced parameters state
@@ -728,8 +731,8 @@ export function ImageStudio() {
                 list.innerHTML = '';
 
                 if (useLocalModel) {
-                    // ── Local model list ──────────────────────────────────────
-                    const filtered = LOCAL_MODEL_CATALOG.filter(m =>
+                    // ── Local model list (Wan2GP image-capable models only) ───
+                    const filtered = LOCAL_IMAGE_MODELS.filter(m =>
                         m.name.toLowerCase().includes(filter.toLowerCase()) ||
                         m.id.toLowerCase().includes(filter.toLowerCase())
                     );
@@ -748,7 +751,7 @@ export function ImageStudio() {
                                         <span class="text-xs font-bold text-white tracking-tight">${m.name}</span>
                                         ${m.featured ? '<span class="text-[9px] font-black px-1 py-0.5 rounded bg-primary/20 text-primary">FEATURED</span>' : ''}
                                     </div>
-                                    <span class="text-[10px] text-muted">${m.sizeGB} GB · ${m.type.toUpperCase()}</span>
+                                    <span class="text-[10px] text-muted">${m.type.toUpperCase()} · ${m.family}</span>
                                 </div>
                             </div>
                             ${selectedLocalModel === m.id ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9ff00" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
@@ -770,14 +773,22 @@ export function ImageStudio() {
                 // ── Remote (API) model list ───────────────────────────────────
                 const filtered = getCurrentModels().filter(m => m.name.toLowerCase().includes(filter.toLowerCase()) || m.id.toLowerCase().includes(filter.toLowerCase()));
 
-                filtered.forEach(m => {
+                const getIconColor = (m) => {
+                    if (m.family === 'fal') return 'bg-emerald-500/10 text-emerald-400';
+                    if (m.family === 'kontext') return 'bg-blue-500/10 text-blue-400';
+                    if (m.family === 'effects') return 'bg-purple-500/10 text-purple-400';
+                    return 'bg-primary/10 text-primary';
+                };
+
+                const makeItem = (m) => {
                     const item = document.createElement('div');
                     item.className = `flex items-center justify-between p-3.5 hover:bg-white/5 rounded-2xl cursor-pointer transition-all border border-transparent hover:border-white/5 ${selectedModel === m.id ? 'bg-white/5 border-white/5' : ''}`;
                     item.innerHTML = `
                         <div class="flex items-center gap-3.5">
-                             <div class="w-10 h-10 ${m.family === 'kontext' ? 'bg-blue-500/10 text-blue-400' : m.family === 'effects' ? 'bg-purple-500/10 text-purple-400' : 'bg-primary/10 text-primary'} border border-white/5 rounded-xl flex items-center justify-center font-black text-sm shadow-inner uppercase">${m.name.charAt(0)}</div>
+                             <div class="w-10 h-10 ${getIconColor(m)} border border-white/5 rounded-xl flex items-center justify-center font-black text-sm shadow-inner uppercase">${m.name.charAt(0)}</div>
                              <div class="flex flex-col gap-0.5">
                                 <span class="text-xs font-bold text-white tracking-tight">${m.name}</span>
+                                ${m.family === 'fal' ? '<span class="text-[9px] text-emerald-400/70 font-semibold">fal.ai</span>' : ''}
                              </div>
                         </div>
                         ${selectedModel === m.id ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9ff00" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
@@ -804,8 +815,21 @@ export function ImageStudio() {
 
                         closeDropdown();
                     };
-                    list.appendChild(item);
-                });
+                    return item;
+                };
+
+                const mainModels = filtered.filter(m => m.family !== 'fal');
+                const falModels = filtered.filter(m => m.family === 'fal');
+
+                mainModels.forEach(m => list.appendChild(makeItem(m)));
+
+                if (falModels.length > 0) {
+                    const sectionLabel = document.createElement('div');
+                    sectionLabel.className = 'text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest px-3 py-2 mt-1 border-t border-white/5';
+                    sectionLabel.textContent = 'Fal.ai Models';
+                    list.appendChild(sectionLabel);
+                    falModels.forEach(m => list.appendChild(makeItem(m)));
+                }
             };
 
             renderModels();
@@ -1177,11 +1201,11 @@ export function ImageStudio() {
             progressWrap.classList.remove('hidden');
             progressWrap.classList.add('flex');
 
-            const unsub = localAI.onProgress(({ step, totalSteps, progress, status }) => {
-                const pct = Math.round((progress || (step / totalSteps)) * 100);
+            const unsub = localAI.onProgress(({ progress, status }) => {
+                const pct = Math.round((progress ?? 0) * 100);
                 if (progressFill) progressFill.style.width = `${pct}%`;
-                if (progressPct) progressPct.textContent = `${pct}%`;
-                generateBtn.innerHTML = `<span class="animate-spin inline-block mr-2 text-black">◌</span> ${pct}%`;
+                if (progressPct) progressPct.textContent = status === 'starting' ? 'Starting...' : `${pct}%`;
+                generateBtn.innerHTML = `<span class="animate-spin inline-block mr-2 text-black">◌</span> ${status === 'starting' ? '...' : pct + '%'}`;
             });
 
             let hadError = false;
@@ -1199,20 +1223,20 @@ export function ImageStudio() {
                 progressWrap.classList.replace('flex', 'hidden');
                 progressWrap.classList.add('hidden');
 
-                if (res?.url) {
-                    addToHistory({
-                        id: Date.now().toString(),
-                        url: res.url,
-                        prompt,
-                        model: `local:${selectedLocalModel}`,
-                        aspect_ratio: selectedAr,
-                        seed: res.seed,
-                        timestamp: new Date().toISOString()
-                    });
-                    showImageInCanvas(res.url);
-                } else {
-                    throw new Error('No image returned from local generation');
+                if (!res?.url) throw new Error('No output returned from local generation');
+                if (res.mediaType === 'video') {
+                    throw new Error('This model produces video — use the Video studio instead.');
                 }
+                addToHistory({
+                    id: Date.now().toString(),
+                    url: res.url,
+                    prompt,
+                    model: `local:${selectedLocalModel}`,
+                    aspect_ratio: selectedAr,
+                    seed: res.seed,
+                    timestamp: new Date().toISOString()
+                });
+                showImageInCanvas(res.url);
             } catch (e) {
                 hadError = true;
                 unsub();

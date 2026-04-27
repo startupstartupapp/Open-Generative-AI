@@ -68,7 +68,7 @@ const LOCAL_MODEL_CATALOG = [
         type: 'sd1',
         filename: 'DreamShaper_8_pruned.safetensors',
         sizeGB: 2.1,
-        downloadUrl: 'https://huggingface.co/Lykon/dreamshaper-8/resolve/main/DreamShaper_8_pruned.safetensors',
+        downloadUrl: 'https://huggingface.co/Lykon/DreamShaper/resolve/main/DreamShaper_8_pruned.safetensors',
         aspectRatios: ['1:1', '4:3', '3:4', '16:9', '9:16'],
         defaultWidth: 512,
         defaultHeight: 512,

@@ -2133,6 +2133,430 @@ export const t2iModels = [
         "step": 1
       }
     }
+  },
+  // ─── fal.ai Text-to-Image ─────────────────────────────────────────────────
+  {
+    "id": "fal-flux-schnell",
+    "name": "Fal FLUX Schnell",
+    "endpoint": "fal-ai/flux/schnell",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the image you want to generate.",
+        "examples": ["A photorealistic cat sitting on a windowsill at golden hour"]
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "3:2", "21:9"], "default": "1:1"
+      },
+      "num_images": {
+        "type": "int", "title": "Number of Images", "name": "num_images",
+        "default": 1, "minValue": 1, "maxValue": 8, "step": 1
+      },
+      "num_inference_steps": {
+        "type": "int", "title": "Inference Steps", "name": "num_inference_steps",
+        "description": "Number of denoising steps (1–12, faster at lower values).",
+        "default": 4, "minValue": 1, "maxValue": 12, "step": 1
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "jpeg"
+      }
+    }
+  },
+  {
+    "id": "fal-flux-dev",
+    "name": "Fal FLUX Dev",
+    "endpoint": "fal-ai/flux/dev",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the image you want to generate.",
+        "examples": ["A hyperrealistic portrait of an astronaut on Mars at sunset"]
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "3:2", "21:9"], "default": "1:1"
+      },
+      "num_images": {
+        "type": "int", "title": "Number of Images", "name": "num_images",
+        "default": 1, "minValue": 1, "maxValue": 4, "step": 1
+      },
+      "num_inference_steps": {
+        "type": "int", "title": "Inference Steps", "name": "num_inference_steps",
+        "description": "Number of denoising steps (1–50, higher = more detail).",
+        "default": 28, "minValue": 1, "maxValue": 50, "step": 1
+      },
+      "guidance_scale": {
+        "type": "float", "title": "Guidance Scale", "name": "guidance_scale",
+        "description": "How closely to follow the prompt (1–10).",
+        "default": 3.5, "minValue": 1.0, "maxValue": 10.0, "step": 0.5
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "jpeg"
+      }
+    }
+  },
+  {
+    "id": "fal-flux-pro",
+    "name": "Fal FLUX Pro",
+    "endpoint": "fal-ai/flux-pro/v1.1",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the image you want to generate.",
+        "examples": ["A cinematic still of a neon-lit Tokyo street at night in the rain"]
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"], "default": "1:1"
+      },
+      "num_images": {
+        "type": "int", "title": "Number of Images", "name": "num_images",
+        "default": 1, "minValue": 1, "maxValue": 4, "step": 1
+      },
+      "safety_tolerance": {
+        "type": "string", "title": "Safety Tolerance", "name": "safety_tolerance",
+        "description": "Content safety level (1 = strictest, 6 = most permissive).",
+        "enum": ["1", "2", "3", "4", "5", "6"], "default": "2"
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "jpeg"
+      }
+    }
+  },
+  {
+    "id": "fal-flux-kontext-pro",
+    "name": "Fal FLUX Kontext Pro",
+    "endpoint": "fal-ai/flux-pro/kontext",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe what to change. You can reference an uploaded image as context.",
+        "examples": ["Make the subject wear a vintage leather jacket, keeping the scene identical"]
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"], "default": "1:1"
+      },
+      "guidance_scale": {
+        "type": "float", "title": "Guidance Scale", "name": "guidance_scale",
+        "description": "How closely to follow the prompt (1–10).",
+        "default": 2.5, "minValue": 1.0, "maxValue": 10.0, "step": 0.5
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "jpeg"
+      }
+    }
+  },
+  {
+    "id": "fal-recraft-v3",
+    "name": "Fal Recraft V3",
+    "endpoint": "fal-ai/recraft/v3/text-to-image",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the image you want to generate.",
+        "examples": ["A minimalist vector illustration of mountain peaks at dawn"]
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"], "default": "1:1"
+      },
+      "style": {
+        "type": "string", "title": "Style", "name": "style",
+        "description": "Visual style of the generated image.",
+        "enum": [
+          "realistic_image",
+          "digital_illustration",
+          "vector_illustration",
+          "realistic_image/b_and_w",
+          "realistic_image/hard_flash",
+          "realistic_image/hdr",
+          "realistic_image/natural_light",
+          "realistic_image/studio_portrait",
+          "digital_illustration/pixel_art",
+          "digital_illustration/hand_drawn",
+          "digital_illustration/grain",
+          "digital_illustration/infantile_sketch",
+          "digital_illustration/2d_art_poster",
+          "digital_illustration/engraving_color",
+          "digital_illustration/flat_air_art"
+        ],
+        "default": "realistic_image"
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "jpeg"
+      }
+    }
+  },
+  {
+    "id": "fal-nano-banana-2",
+    "name": "Fal Nano Banana 2",
+    "endpoint": "fal-ai/nano-banana-2",
+    "family": "fal",
+    "usesAspectRatioString": true,
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the image you want to generate.",
+        "examples": ["A serene mountain landscape at golden hour, ultra-detailed"]
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["auto", "21:9", "16:9", "3:2", "4:3", "5:4", "1:1", "4:5", "3:4", "2:3", "9:16"],
+        "default": "auto"
+      },
+      "num_images": {
+        "type": "int", "title": "Number of Images", "name": "num_images",
+        "default": 1, "minValue": 1, "maxValue": 4, "step": 1
+      },
+      "resolution": {
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["0.5K", "1K", "2K", "4K"], "default": "1K"
+      },
+      "safety_tolerance": {
+        "type": "string", "title": "Safety Tolerance", "name": "safety_tolerance",
+        "enum": ["1", "2", "3", "4", "5", "6"], "default": "4"
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "png"
+      }
+    }
+  },
+  {
+    "id": "fal-qwen-image",
+    "name": "Fal Qwen Image",
+    "endpoint": "fal-ai/qwen-image",
+    "family": "fal",
+    "usesAspectRatioString": true,
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the image you want to generate.",
+        "examples": ["A vibrant cyberpunk cityscape at night with neon reflections"]
+      },
+      "negative_prompt": {
+        "type": "string", "title": "Negative Prompt", "name": "negative_prompt",
+        "description": "What to avoid in the generated image."
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"], "default": "4:3"
+      },
+      "num_images": {
+        "type": "int", "title": "Number of Images", "name": "num_images",
+        "default": 1, "minValue": 1, "maxValue": 4, "step": 1
+      },
+      "num_inference_steps": {
+        "type": "int", "title": "Inference Steps", "name": "num_inference_steps",
+        "default": 30, "minValue": 1, "maxValue": 50, "step": 1
+      },
+      "guidance_scale": {
+        "type": "float", "title": "Guidance Scale", "name": "guidance_scale",
+        "default": 2.5, "minValue": 1.0, "maxValue": 10.0, "step": 0.5
+      },
+      "output_format": {
+        "type": "string", "title": "Output Format", "name": "output_format",
+        "enum": ["jpeg", "png"], "default": "jpeg"
+      }
+    }
+  },
+  // ─── New fal.ai T2I models ────────────────────────────────────────────────
+  {
+    "id": "fal-flux-pro-ultra",
+    "name": "Fal FLUX Pro Ultra",
+    "endpoint": "fal-ai/flux-pro/v1.1-ultra",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the image. Ultra produces up to 4MP output." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["21:9", "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16", "9:21"], "default": "1:1" },
+      "num_images": { "type": "int", "title": "Number of Images", "name": "num_images", "default": 1, "minValue": 1, "maxValue": 4, "step": 1 },
+      "safety_tolerance": { "type": "string", "title": "Safety Tolerance", "name": "safety_tolerance", "enum": ["1", "2", "3", "4", "5", "6"], "default": "2" },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
+  },
+  {
+    "id": "fal-flux-2",
+    "name": "Fal FLUX.2 Dev",
+    "endpoint": "fal-ai/flux-2",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "FLUX.2 Dev — 10x cheaper, 6x more efficient than FLUX.1." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "3:2", "21:9"], "default": "1:1" },
+      "num_images": { "type": "int", "title": "Number of Images", "name": "num_images", "default": 1, "minValue": 1, "maxValue": 4, "step": 1 },
+      "num_inference_steps": { "type": "int", "title": "Inference Steps", "name": "num_inference_steps", "default": 28, "minValue": 1, "maxValue": 50, "step": 1 },
+      "guidance_scale": { "type": "float", "title": "Guidance Scale", "name": "guidance_scale", "default": 3.5, "minValue": 1.0, "maxValue": 10.0, "step": 0.5 },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
+  },
+  {
+    "id": "fal-flux-2-pro",
+    "name": "Fal FLUX.2 Pro",
+    "endpoint": "fal-ai/flux-2-pro",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "FLUX.2 Pro — zero-config production quality." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"], "default": "1:1" },
+      "num_images": { "type": "int", "title": "Number of Images", "name": "num_images", "default": 1, "minValue": 1, "maxValue": 4, "step": 1 },
+      "safety_tolerance": { "type": "string", "title": "Safety Tolerance", "name": "safety_tolerance", "enum": ["1", "2", "3", "4", "5", "6"], "default": "2" },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
+  },
+  {
+    "id": "fal-flux-kontext-max",
+    "name": "Fal FLUX Kontext Max",
+    "endpoint": "fal-ai/flux-pro/kontext/max",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "FLUX Kontext Max — superior typography and prompt adherence." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"], "default": "1:1" },
+      "guidance_scale": { "type": "float", "title": "Guidance Scale", "name": "guidance_scale", "default": 2.5, "minValue": 1.0, "maxValue": 10.0, "step": 0.5 },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
+  },
+  {
+    "id": "fal-imagen4",
+    "name": "Fal Imagen 4",
+    "endpoint": "fal-ai/imagen4/preview",
+    "family": "fal",
+    "usesAspectRatioString": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Google Imagen 4 — ranked #3 on image arena leaderboard." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["1:1", "9:16", "16:9", "3:4", "4:3"], "default": "1:1" },
+      "num_images": { "type": "int", "title": "Number of Images", "name": "num_images", "default": 1, "minValue": 1, "maxValue": 4, "step": 1 },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
+  },
+  {
+    "id": "fal-imagen4-fast",
+    "name": "Fal Imagen 4 Fast",
+    "endpoint": "fal-ai/imagen4/preview/fast",
+    "family": "fal",
+    "usesAspectRatioString": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Imagen 4 Fast — lower cost ($0.04/image), great for rapid iteration." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["1:1", "9:16", "16:9", "3:4", "4:3"], "default": "1:1" },
+      "num_images": { "type": "int", "title": "Number of Images", "name": "num_images", "default": 1, "minValue": 1, "maxValue": 4, "step": 1 },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
+  },
+  {
+    "id": "fal-imagen4-ultra",
+    "name": "Fal Imagen 4 Ultra",
+    "endpoint": "fal-ai/imagen4/preview/ultra",
+    "family": "fal",
+    "usesAspectRatioString": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Imagen 4 Ultra — top-tier quality at $0.06/image." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["1:1", "9:16", "16:9", "3:4", "4:3"], "default": "1:1" },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
+  },
+  {
+    "id": "fal-recraft-v4",
+    "name": "Fal Recraft V4",
+    "endpoint": "fal-ai/recraft/v4/text-to-image",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Recraft V4 — designer-focused brand quality." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"], "default": "1:1" },
+      "style": { "type": "string", "title": "Style", "name": "style", "enum": ["realistic_image", "digital_illustration", "vector_illustration", "realistic_image/b_and_w", "realistic_image/hard_flash", "realistic_image/hdr", "realistic_image/natural_light", "realistic_image/studio_portrait", "digital_illustration/pixel_art", "digital_illustration/hand_drawn", "digital_illustration/grain", "digital_illustration/2d_art_poster", "digital_illustration/engraving_color", "digital_illustration/flat_air_art"], "default": "realistic_image" },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
+  },
+  {
+    "id": "fal-gpt-image-1",
+    "name": "Fal GPT Image 1",
+    "endpoint": "fal-ai/gpt-image-1/text-to-image",
+    "family": "fal",
+    "usesAspectRatioString": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "OpenAI GPT Image 1 — natively multimodal image generation." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["1:1", "16:9", "9:16"], "default": "1:1" },
+      "quality": { "type": "string", "title": "Quality", "name": "quality", "enum": ["standard", "hd"], "default": "standard" },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
+  },
+  {
+    "id": "fal-gpt-image-2",
+    "name": "Fal GPT Image 2",
+    "endpoint": "openai/gpt-image-2",
+    "family": "fal",
+    "usesAspectRatioString": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "OpenAI GPT Image 2 — latest flagship image model." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["1:1", "16:9", "9:16"], "default": "1:1" },
+      "quality": { "type": "string", "title": "Quality", "name": "quality", "enum": ["standard", "hd", "ultra"], "default": "standard" },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
+  },
+  {
+    "id": "fal-ideogram-v3",
+    "name": "Fal Ideogram V3",
+    "endpoint": "fal-ai/ideogram/v3",
+    "family": "fal",
+    "usesAspectRatioString": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Ideogram V3 — exceptional text rendering in images." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"], "default": "1:1" },
+      "style_type": { "type": "string", "title": "Style", "name": "style_type", "enum": ["FLASH", "TURBO", "BALANCED", "QUALITY"], "default": "BALANCED" },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
+  },
+  {
+    "id": "fal-seedream-v4-5",
+    "name": "Fal Seedream v4.5",
+    "endpoint": "fal-ai/bytedance/seedream/v4.5/text-to-image",
+    "family": "fal",
+    "usesAspectRatioString": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "ByteDance Seedream v4.5 — up to 4MP, unified generation and editing." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"], "default": "1:1" },
+      "num_images": { "type": "int", "title": "Number of Images", "name": "num_images", "default": 1, "minValue": 1, "maxValue": 4, "step": 1 },
+      "guidance_scale": { "type": "float", "title": "Guidance Scale", "name": "guidance_scale", "default": 2.5, "minValue": 1.0, "maxValue": 10.0, "step": 0.5 },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
+  },
+  {
+    "id": "fal-qwen-image-2",
+    "name": "Fal Qwen Image 2.0",
+    "endpoint": "fal-ai/qwen-image-2/text-to-image",
+    "family": "fal",
+    "usesAspectRatioString": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Qwen Image 2.0 — native 2K resolution, 7B parameter model." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt", "description": "What to avoid in the generated image." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"], "default": "4:3" },
+      "num_images": { "type": "int", "title": "Number of Images", "name": "num_images", "default": 1, "minValue": 1, "maxValue": 4, "step": 1 },
+      "num_inference_steps": { "type": "int", "title": "Inference Steps", "name": "num_inference_steps", "default": 30, "minValue": 1, "maxValue": 50, "step": 1 },
+      "guidance_scale": { "type": "float", "title": "Guidance Scale", "name": "guidance_scale", "default": 2.5, "minValue": 1.0, "maxValue": 10.0, "step": 0.5 },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
+  },
+  {
+    "id": "fal-hunyuan-image-v3",
+    "name": "Fal Hunyuan Image v3",
+    "endpoint": "fal-ai/hunyuan-image/v3/text-to-image",
+    "family": "fal",
+    "usesAspectRatioString": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Tencent Hunyuan Image v3 — open-source, strong prompt fidelity." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt", "description": "What to avoid in the generated image." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"], "default": "1:1" },
+      "num_images": { "type": "int", "title": "Number of Images", "name": "num_images", "default": 1, "minValue": 1, "maxValue": 4, "step": 1 },
+      "output_format": { "type": "string", "title": "Output Format", "name": "output_format", "enum": ["jpeg", "png"], "default": "jpeg" }
+    }
   }
 ];
 
@@ -2556,6 +2980,321 @@ export const t2vModels = [
       "aspect_ratio": { "enum": ["16:9", "9:16"], "title": "Aspect Ratio", "name": "aspect_ratio", "type": "string", "description": "The aspect ratio of the generated video", "default": "16:9" },
       "duration": { "title": "Duration", "name": "duration", "type": "int", "description": "The duration of the generated video in seconds", "default": 5 },
       "resolution": { "enum": ["480p", "720p", "1080p"], "title": "Resolution", "name": "resolution", "type": "string", "description": "The resolution of the generated video.", "default": "720p" }
+    }
+  },
+  // ─── fal.ai Text-to-Video ─────────────────────────────────────────────────
+  {
+    "id": "fal-veo3",
+    "name": "Fal Veo 3",
+    "endpoint": "fal-ai/veo3",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the video you want to generate. Veo 3 supports native audio generation."
+      },
+      "negative_prompt": {
+        "type": "string", "title": "Negative Prompt", "name": "negative_prompt",
+        "description": "What to avoid in the generated video."
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1", "auto"], "default": "16:9"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [4, 6, 8], "default": 8
+      },
+      "generate_audio": {
+        "type": "bool", "title": "Generate Audio", "name": "generate_audio",
+        "description": "Whether to generate native audio with the video.",
+        "default": true
+      }
+    }
+  },
+  {
+    "id": "fal-kling-v2-master-t2v",
+    "name": "Fal Kling v2 Master",
+    "endpoint": "fal-ai/kling-video/v2/master/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the video scene in detail." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt", "description": "What to exclude from the video." },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1"], "default": "16:9"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [5, 10], "default": 5
+      },
+      "cfg_scale": {
+        "type": "float", "title": "CFG Scale", "name": "cfg_scale",
+        "description": "Prompt adherence strength (0–1).",
+        "default": 0.5, "minValue": 0, "maxValue": 1.0, "step": 0.1
+      }
+    }
+  },
+  {
+    "id": "fal-seedance-v2-t2v",
+    "name": "Fal Seedance 2.0",
+    "endpoint": "bytedance/seedance-2.0/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the video you want to generate." },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["auto", "16:9", "9:16", "1:1", "4:3", "3:4", "21:9"], "default": "auto"
+      },
+      "resolution": {
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["480p", "720p", "1080p"], "default": "720p"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [4, 5, 6, 8, 10, 12, 15], "default": 5
+      },
+      "generate_audio": {
+        "type": "bool", "title": "Generate Audio", "name": "generate_audio",
+        "default": true
+      }
+    }
+  },
+  {
+    "id": "fal-veo3-1",
+    "name": "Fal Veo 3.1",
+    "endpoint": "fal-ai/veo3.1",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the video. Veo 3.1 supports synchronized audio."
+      },
+      "negative_prompt": {
+        "type": "string", "title": "Negative Prompt", "name": "negative_prompt",
+        "description": "What to avoid in the video."
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16"], "default": "16:9"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [4, 6, 8], "default": 8
+      },
+      "resolution": {
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["720p", "1080p", "4k"], "default": "720p"
+      },
+      "generate_audio": {
+        "type": "bool", "title": "Generate Audio", "name": "generate_audio",
+        "description": "Whether to generate native audio with the video.",
+        "default": true
+      },
+      "safety_tolerance": {
+        "type": "string", "title": "Safety Tolerance", "name": "safety_tolerance",
+        "enum": ["1", "2", "3", "4", "5", "6"], "default": "4"
+      }
+    }
+  },
+  {
+    "id": "fal-sora-2-t2v",
+    "name": "Fal Sora 2",
+    "endpoint": "fal-ai/sora-2/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the video. Sora 2 produces cinematic motion with synced audio."
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16"], "default": "16:9"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [4, 8, 12, 16, 20], "default": 4
+      },
+      "resolution": {
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["720p"], "default": "720p"
+      }
+    }
+  },
+  {
+    "id": "fal-sora-2-pro-t2v",
+    "name": "Fal Sora 2 Pro",
+    "endpoint": "fal-ai/sora-2/text-to-video/pro",
+    "family": "fal",
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Premium 1080p Sora 2 with extended duration and synced audio."
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16"], "default": "16:9"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [4, 8, 12, 16, 20], "default": 8
+      },
+      "resolution": {
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["720p", "1080p", "true_1080p"], "default": "1080p"
+      }
+    }
+  },
+  // ─── New fal.ai T2V models ────────────────────────────────────────────────
+  {
+    "id": "fal-veo3-fast",
+    "name": "Fal Veo 3 Fast",
+    "endpoint": "fal-ai/veo3/fast",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Veo 3 Fast — speed-optimized with native audio." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt" },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16", "1:1"], "default": "16:9" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [4, 6, 8], "default": 8 },
+      "generate_audio": { "type": "bool", "title": "Generate Audio", "name": "generate_audio", "default": true }
+    }
+  },
+  {
+    "id": "fal-kling-v2-6-pro-t2v",
+    "name": "Fal Kling v2.6 Pro",
+    "endpoint": "fal-ai/kling-video/v2.6/pro/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Kling v2.6 Pro — native audio generation, smooth motion." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt" },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16", "1:1"], "default": "16:9" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [5, 10], "default": 5 },
+      "cfg_scale": { "type": "float", "title": "CFG Scale", "name": "cfg_scale", "default": 0.5, "minValue": 0, "maxValue": 1.0, "step": 0.1 },
+      "generate_audio": { "type": "bool", "title": "Generate Audio", "name": "generate_audio", "default": false }
+    }
+  },
+  {
+    "id": "fal-kling-v3-standard-t2v",
+    "name": "Fal Kling v3 Standard",
+    "endpoint": "fal-ai/kling-video/v3/standard/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Kling v3 Standard — multi-shot support, element references." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt" },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16", "1:1"], "default": "16:9" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [5, 10], "default": 5 }
+    }
+  },
+  {
+    "id": "fal-kling-v3-pro-t2v",
+    "name": "Fal Kling v3 Pro",
+    "endpoint": "fal-ai/kling-video/v3/pro/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Kling v3 Pro — multi-shot, element references, highest Kling quality." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt" },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16", "1:1"], "default": "16:9" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [5, 10], "default": 5 }
+    }
+  },
+  {
+    "id": "fal-kling-o3-4k-t2v",
+    "name": "Fal Kling O3 4K",
+    "endpoint": "fal-ai/kling-video/o3/4k/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Kling O3 4K — cinematic 4K, Omni multimodal variant." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt" },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16", "1:1"], "default": "16:9" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [5, 10], "default": 5 }
+    }
+  },
+  {
+    "id": "fal-wan-v2-7-t2v",
+    "name": "Fal Wan v2.7",
+    "endpoint": "fal-ai/wan/v2.7/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Alibaba Wan v2.7 — up to 1080p, 2–15s, $0.10/s." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt" },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16", "1:1", "4:3", "3:4"], "default": "16:9" },
+      "resolution": { "type": "string", "title": "Resolution", "name": "resolution", "enum": ["480p", "720p", "1080p"], "default": "720p" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "default": 5, "minValue": 2, "maxValue": 15, "step": 1 }
+    }
+  },
+  {
+    "id": "fal-ltx-2-3-t2v",
+    "name": "Fal LTX-2.3",
+    "endpoint": "fal-ai/ltx-2.3/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "LTX-2.3 — 22B open-source model with native audio support." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt" },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16", "1:1", "4:3", "3:4"], "default": "16:9" },
+      "resolution": { "type": "string", "title": "Resolution", "name": "resolution", "enum": ["480p", "720p"], "default": "720p" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "default": 5, "minValue": 2, "maxValue": 30, "step": 1 }
+    }
+  },
+  {
+    "id": "fal-hailuo-2-3-standard-t2v",
+    "name": "Fal Hailuo 2.3 Standard",
+    "endpoint": "fal-ai/minimax/hailuo-2.3/standard/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "MiniMax Hailuo 2.3 Standard — camera controls, high quality." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16", "1:1"], "default": "16:9" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [5, 10], "default": 5 },
+      "resolution": { "type": "string", "title": "Resolution", "name": "resolution", "enum": ["720p", "1080p"], "default": "720p" }
+    }
+  },
+  {
+    "id": "fal-hailuo-2-3-pro-t2v",
+    "name": "Fal Hailuo 2.3 Pro",
+    "endpoint": "fal-ai/minimax/hailuo-2.3/pro/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "MiniMax Hailuo 2.3 Pro — $0.49/video, premium quality." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16", "1:1"], "default": "16:9" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [5, 10], "default": 5 },
+      "resolution": { "type": "string", "title": "Resolution", "name": "resolution", "enum": ["720p", "1080p"], "default": "1080p" }
+    }
+  },
+  {
+    "id": "fal-pika-v2-1-t2v",
+    "name": "Fal Pika v2.1",
+    "endpoint": "fal-ai/pika/v2.1/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Pika v2.1 — creative video generation with cinematic motion." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16", "1:1", "4:3", "3:4"], "default": "16:9" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "default": 5, "minValue": 3, "maxValue": 10, "step": 1 }
+    }
+  },
+  {
+    "id": "fal-pixverse-v6-t2v",
+    "name": "Fal PixVerse v6",
+    "endpoint": "fal-ai/pixverse/v6/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "PixVerse v6 — cinematic with 20+ lens controls." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt" },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16", "1:1", "4:3", "3:4"], "default": "16:9" },
+      "quality": { "type": "string", "title": "Quality", "name": "quality", "enum": ["360p", "540p", "720p", "1080p"], "default": "720p" },
+      "motion_mode": { "type": "string", "title": "Motion Mode", "name": "motion_mode", "enum": ["normal", "fast"], "default": "normal" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [5, 8, 10], "default": 5 }
+    }
+  },
+  {
+    "id": "fal-seedance-v2-fast-t2v",
+    "name": "Fal Seedance 2.0 Fast",
+    "endpoint": "bytedance/seedance-2.0/fast/text-to-video",
+    "family": "fal",
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Seedance 2.0 Fast — lower latency and cost variant." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["auto", "16:9", "9:16", "1:1", "4:3", "3:4", "21:9"], "default": "auto" },
+      "resolution": { "type": "string", "title": "Resolution", "name": "resolution", "enum": ["480p", "720p", "1080p"], "default": "720p" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [4, 5, 6, 8, 10, 12, 15], "default": 5 },
+      "generate_audio": { "type": "bool", "title": "Generate Audio", "name": "generate_audio", "default": true }
     }
   }
 ];
@@ -8019,6 +8758,294 @@ export const i2vModels = [
         "default": "basic"
       }
     }
+  },
+  // ─── fal.ai Image-to-Video ────────────────────────────────────────────────
+  {
+    "id": "fal-kling-v1-6-pro-i2v",
+    "name": "Fal Kling v1.6 Pro I2V",
+    "endpoint": "fal-ai/kling-video/v1.6/pro/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the motion or scene to animate." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt", "description": "What to exclude from the video." },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [5, 10], "default": 5
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1"], "default": "16:9"
+      },
+      "cfg_scale": {
+        "type": "float", "title": "CFG Scale", "name": "cfg_scale",
+        "description": "Prompt adherence strength (0–1).",
+        "default": 0.5, "minValue": 0, "maxValue": 1.0, "step": 0.1
+      }
+    }
+  },
+  {
+    "id": "fal-kling-v3-pro-i2v",
+    "name": "Fal Kling v3 Pro I2V",
+    "endpoint": "fal-ai/kling-video/v3/pro/image-to-video",
+    "family": "fal",
+    "imageField": "start_image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the motion or scene to animate." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt", "description": "What to exclude from the video." },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [5, 10], "default": 5
+      }
+    }
+  },
+  {
+    "id": "fal-pixverse-v6-i2v",
+    "name": "Fal PixVerse v6 I2V",
+    "endpoint": "fal-ai/pixverse/v6/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the motion or scene to animate." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt", "description": "What to exclude from the video." },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["16:9", "9:16", "1:1", "4:3", "3:4"], "default": "16:9"
+      },
+      "quality": {
+        "type": "string", "title": "Quality", "name": "quality",
+        "enum": ["360p", "540p", "720p", "1080p"], "default": "720p"
+      },
+      "motion_mode": {
+        "type": "string", "title": "Motion Mode", "name": "motion_mode",
+        "enum": ["normal", "fast"], "default": "normal"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [5, 8], "default": 5
+      }
+    }
+  },
+  {
+    "id": "fal-seedance-v2-i2v",
+    "name": "Fal Seedance 2.0 I2V",
+    "endpoint": "bytedance/seedance-2.0/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the motion to apply to the image."
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["auto", "16:9", "9:16", "1:1", "4:3", "3:4", "21:9"], "default": "auto"
+      },
+      "resolution": {
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["480p", "720p", "1080p"], "default": "720p"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [4, 5, 6, 8, 10, 12, 15], "default": 5
+      },
+      "generate_audio": {
+        "type": "bool", "title": "Generate Audio", "name": "generate_audio",
+        "default": true
+      }
+    }
+  },
+  {
+    "id": "fal-veo3-1-i2v",
+    "name": "Fal Veo 3.1 I2V",
+    "endpoint": "fal-ai/veo3.1/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the motion or scene to animate."
+      },
+      "negative_prompt": {
+        "type": "string", "title": "Negative Prompt", "name": "negative_prompt",
+        "description": "What to avoid in the video."
+      },
+      "aspect_ratio": {
+        "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
+        "enum": ["auto", "16:9", "9:16"], "default": "auto"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [4, 6, 8], "default": 8
+      },
+      "resolution": {
+        "type": "string", "title": "Resolution", "name": "resolution",
+        "enum": ["720p", "1080p", "4k"], "default": "720p"
+      },
+      "generate_audio": {
+        "type": "bool", "title": "Generate Audio", "name": "generate_audio",
+        "default": true
+      },
+      "safety_tolerance": {
+        "type": "string", "title": "Safety Tolerance", "name": "safety_tolerance",
+        "enum": ["1", "2", "3", "4", "5", "6"], "default": "4"
+      }
+    }
+  },
+  {
+    "id": "fal-kling-v3-4k-i2v",
+    "name": "Fal Kling v3 4K I2V",
+    "endpoint": "fal-ai/kling-video/v3/4k/image-to-video",
+    "family": "fal",
+    "imageField": "start_image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": {
+        "type": "string", "title": "Prompt", "name": "prompt",
+        "description": "Describe the motion. 4K cinematic output via Kling v3."
+      },
+      "negative_prompt": {
+        "type": "string", "title": "Negative Prompt", "name": "negative_prompt",
+        "description": "What to exclude from the video.",
+        "default": "blur, distort, and low quality"
+      },
+      "duration": {
+        "type": "int", "title": "Duration (seconds)", "name": "duration",
+        "enum": [5, 10], "default": 5
+      },
+      "cfg_scale": {
+        "type": "float", "title": "CFG Scale", "name": "cfg_scale",
+        "description": "Prompt adherence strength (0–1).",
+        "default": 0.5, "minValue": 0, "maxValue": 1.0, "step": 0.1
+      },
+      "shot_type": {
+        "type": "string", "title": "Shot Type", "name": "shot_type",
+        "enum": ["customize", "intelligent"], "default": "customize"
+      },
+      "generate_audio": {
+        "type": "bool", "title": "Generate Audio", "name": "generate_audio",
+        "default": true
+      }
+    }
+  },
+  // ─── New fal.ai I2V models ────────────────────────────────────────────────
+  {
+    "id": "fal-veo3-i2v",
+    "name": "Fal Veo 3 I2V",
+    "endpoint": "fal-ai/veo3/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the motion. Veo 3 generates native audio." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt" },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["auto", "16:9", "9:16", "1:1"], "default": "auto" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [4, 6, 8], "default": 8 },
+      "generate_audio": { "type": "bool", "title": "Generate Audio", "name": "generate_audio", "default": true }
+    }
+  },
+  {
+    "id": "fal-sora-2-i2v",
+    "name": "Fal Sora 2 I2V",
+    "endpoint": "fal-ai/sora-2/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Animate an image with Sora 2's cinematic motion." },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16"], "default": "16:9" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [4, 8, 12, 16, 20], "default": 4 },
+      "resolution": { "type": "string", "title": "Resolution", "name": "resolution", "enum": ["720p", "1080p"], "default": "720p" }
+    }
+  },
+  {
+    "id": "fal-kling-v2-6-pro-i2v",
+    "name": "Fal Kling v2.6 Pro I2V",
+    "endpoint": "fal-ai/kling-video/v2.6/pro/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Kling v2.6 Pro I2V — native audio generation." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [5, 10], "default": 5 },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16", "1:1"], "default": "16:9" },
+      "cfg_scale": { "type": "float", "title": "CFG Scale", "name": "cfg_scale", "default": 0.5, "minValue": 0, "maxValue": 1.0, "step": 0.1 },
+      "generate_audio": { "type": "bool", "title": "Generate Audio", "name": "generate_audio", "default": false }
+    }
+  },
+  {
+    "id": "fal-kling-v3-standard-i2v",
+    "name": "Fal Kling v3 Standard I2V",
+    "endpoint": "fal-ai/kling-video/v3/standard/image-to-video",
+    "family": "fal",
+    "imageField": "start_image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Kling v3 Standard I2V — multi-shot, element references." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [5, 10], "default": 5 }
+    }
+  },
+  {
+    "id": "fal-wan-v2-7-i2v",
+    "name": "Fal Wan v2.7 I2V",
+    "endpoint": "fal-ai/wan/v2.7/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Wan v2.7 I2V — supports first+last frame, 2–15s." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt" },
+      "aspect_ratio": { "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio", "enum": ["16:9", "9:16", "1:1", "4:3", "3:4"], "default": "16:9" },
+      "resolution": { "type": "string", "title": "Resolution", "name": "resolution", "enum": ["480p", "720p", "1080p"], "default": "720p" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "default": 5, "minValue": 2, "maxValue": 15, "step": 1 }
+    }
+  },
+  {
+    "id": "fal-ltx-2-3-i2v",
+    "name": "Fal LTX-2.3 I2V",
+    "endpoint": "fal-ai/ltx-2.3/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "LTX-2.3 I2V — 22B open-source image-to-video with audio." },
+      "negative_prompt": { "type": "string", "title": "Negative Prompt", "name": "negative_prompt" },
+      "resolution": { "type": "string", "title": "Resolution", "name": "resolution", "enum": ["480p", "720p"], "default": "720p" },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "default": 5, "minValue": 2, "maxValue": 30, "step": 1 }
+    }
+  },
+  {
+    "id": "fal-hailuo-2-3-standard-i2v",
+    "name": "Fal Hailuo 2.3 Standard I2V",
+    "endpoint": "fal-ai/minimax/hailuo-2.3/standard/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Hailuo 2.3 Standard I2V — camera controls, smooth motion." },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [5, 10], "default": 5 },
+      "resolution": { "type": "string", "title": "Resolution", "name": "resolution", "enum": ["720p", "1080p"], "default": "720p" }
+    }
+  },
+  {
+    "id": "fal-hailuo-2-3-pro-i2v",
+    "name": "Fal Hailuo 2.3 Pro I2V",
+    "endpoint": "fal-ai/minimax/hailuo-2.3/pro/image-to-video",
+    "family": "fal",
+    "imageField": "image_url",
+    "hasPrompt": true,
+    "inputs": {
+      "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Hailuo 2.3 Pro I2V — premium quality, cinematic output." },
+      "duration": { "type": "int", "title": "Duration (seconds)", "name": "duration", "enum": [5, 10], "default": 5 },
+      "resolution": { "type": "string", "title": "Resolution", "name": "resolution", "enum": ["720p", "1080p"], "default": "1080p" }
+    }
   }
 ];
 
@@ -8286,6 +9313,54 @@ export const lipsyncModels = [
         "default": "480p"
       }
     }
+  },
+  // ─── fal.ai LipSync ───────────────────────────────────────────────────────
+  {
+    "id": "fal-sync-lipsync-v3",
+    "name": "Fal Sync Lipsync v3",
+    "endpoint": "fal-ai/sync-lipsync/v3",
+    "family": "fal",
+    "category": "video",
+    "hasPrompt": false,
+    "description": "High-quality video lipsync driven by audio using Sync Labs v3 via fal.ai.",
+    "inputs": {
+      "sync_mode": {
+        "type": "string", "title": "Sync Mode", "name": "sync_mode",
+        "description": "How to handle video/audio length mismatches.",
+        "enum": ["cut_off", "loop", "bounce", "remap", "silence"],
+        "default": "cut_off"
+      }
+    }
+  },
+  {
+    "id": "fal-kling-lipsync",
+    "name": "Fal Kling LipSync",
+    "endpoint": "fal-ai/kling-video/lipsync/audio-to-video",
+    "family": "fal",
+    "category": "video",
+    "hasPrompt": false,
+    "description": "Kling-powered audio-driven lipsync for talking-head videos.",
+    "inputs": {}
+  },
+  {
+    "id": "fal-musetalk",
+    "name": "Fal MuseTalk",
+    "endpoint": "fal-ai/musetalk",
+    "family": "fal",
+    "category": "video",
+    "hasPrompt": false,
+    "description": "Real-time audio-driven talking head lipsync via fal.ai.",
+    "inputs": {}
+  },
+  {
+    "id": "fal-latentsync",
+    "name": "Fal LatentSync",
+    "endpoint": "fal-ai/latentsync",
+    "family": "fal",
+    "category": "video",
+    "hasPrompt": false,
+    "description": "Latent-space video lipsync — audio-to-video synchronization.",
+    "inputs": {}
   }
 ];
 

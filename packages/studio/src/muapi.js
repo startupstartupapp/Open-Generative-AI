@@ -2,6 +2,77 @@ import { getModelById, getVideoModelById, getI2IModelById, getI2VModelById, getV
 
 const BASE_URL = 'https://api.muapi.ai';
 const PROXY_WF_BASE = '/api/workflow';
+const FAL_PROXY = '/api/fal';
+
+// ─── fal.ai helpers ──────────────────────────────────────────────────────────
+
+function getFalKey(params) {
+    return params.falApiKey
+        || (typeof localStorage !== 'undefined' && localStorage.getItem('fal_key'))
+        || null;
+}
+
+function arToImageSize(ar) {
+    switch (ar) {
+        case '16:9':  return { width: 1280, height: 720 };
+        case '9:16':  return { width: 720,  height: 1280 };
+        case '4:3':   return { width: 1024, height: 768 };
+        case '3:4':   return { width: 768,  height: 1024 };
+        case '3:2':   return { width: 1152, height: 768 };
+        case '2:3':   return { width: 768,  height: 1152 };
+        case '21:9':  return { width: 1536, height: 640 };
+        default:      return { width: 1024, height: 1024 };
+    }
+}
+
+async function falSubmit(modelEndpoint, payload, falKey) {
+    const url = `${FAL_PROXY}?action=submit&model=${encodeURIComponent(modelEndpoint)}`;
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-fal-key': falKey },
+        body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Fal submit failed [${response.status}]: ${text.slice(0, 200)}`);
+    }
+    return response.json();
+}
+
+async function falPollStatus(modelEndpoint, requestId, falKey) {
+    const url = `${FAL_PROXY}?action=status&model=${encodeURIComponent(modelEndpoint)}&request_id=${requestId}`;
+    const res = await fetch(url, { headers: { 'x-fal-key': falKey } });
+    if (!res.ok) throw new Error(`Fal status failed [${res.status}]`);
+    return res.json();
+}
+
+async function falGetResult(modelEndpoint, requestId, falKey) {
+    const url = `${FAL_PROXY}?action=result&model=${encodeURIComponent(modelEndpoint)}&request_id=${requestId}`;
+    const res = await fetch(url, { headers: { 'x-fal-key': falKey } });
+    if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Fal result failed [${res.status}]: ${text.slice(0, 200)}`);
+    }
+    return res.json();
+}
+
+async function falWaitForResult(modelEndpoint, requestId, falKey, maxAttempts, interval) {
+    for (let i = 1; i <= maxAttempts; i++) {
+        await new Promise(r => setTimeout(r, interval));
+        const status = await falPollStatus(modelEndpoint, requestId, falKey);
+        if (status.status === 'COMPLETED') return falGetResult(modelEndpoint, requestId, falKey);
+        if (status.status === 'FAILED') throw new Error(`Fal failed: ${status.error || 'Unknown'}`);
+    }
+    throw new Error('Fal generation timed out.');
+}
+
+async function falSubmitAndPoll(modelEndpoint, payload, falKey, onRequestId, maxAttempts, interval) {
+    const submitData = await falSubmit(modelEndpoint, payload, falKey);
+    const requestId = submitData.request_id;
+    if (!requestId) return submitData;
+    if (onRequestId) onRequestId(requestId);
+    return falWaitForResult(modelEndpoint, requestId, falKey, maxAttempts, interval);
+}
 
 async function pollForResult(requestId, key, maxAttempts = 900, interval = 2000) {
     const pollUrl = `${BASE_URL}/api/v1/predictions/${requestId}/result`;
@@ -49,6 +120,33 @@ async function submitAndPoll(endpoint, payload, key, onRequestId, maxAttempts = 
 
 export async function generateImage(apiKey, params) {
     const modelInfo = getModelById(params.model);
+    if (modelInfo?.family === 'fal') {
+        const falKey = getFalKey(params);
+        if (!falKey) throw new Error('Fal.ai API Key missing. Please add it in Settings.');
+        const payload = {
+            prompt: params.prompt || '',
+            num_images: params.num_images ?? 1,
+        };
+        if (modelInfo?.usesAspectRatioString) {
+            if (params.aspect_ratio) payload.aspect_ratio = params.aspect_ratio;
+        } else {
+            payload.image_size = arToImageSize(params.aspect_ratio);
+        }
+        if (params.seed && params.seed !== -1) payload.seed = params.seed;
+        if (params.image_url) payload.image_url = params.image_url;
+        if (params.negative_prompt) payload.negative_prompt = params.negative_prompt;
+        if (params.num_inference_steps != null) payload.num_inference_steps = params.num_inference_steps;
+        if (params.guidance_scale != null) payload.guidance_scale = params.guidance_scale;
+        if (params.safety_tolerance != null) payload.safety_tolerance = params.safety_tolerance;
+        if (params.resolution) payload.resolution = params.resolution;
+        if (params.style) payload.style = params.style;
+        if (params.style_type) payload.style_type = params.style_type;
+        if (params.quality) payload.quality = params.quality;
+        if (params.output_format) payload.output_format = params.output_format;
+        const result = await falSubmitAndPoll(modelInfo.endpoint, payload, falKey, params.onRequestId, 60, 2000);
+        const imageUrl = result.images?.[0]?.url || result.data?.images?.[0]?.url;
+        return { ...result, url: imageUrl };
+    }
     const endpoint = modelInfo?.endpoint || params.model;
     const payload = { prompt: params.prompt };
     if (params.aspect_ratio) payload.aspect_ratio = params.aspect_ratio;
@@ -68,6 +166,21 @@ export async function generateImage(apiKey, params) {
 
 export async function generateI2I(apiKey, params) {
     const modelInfo = getI2IModelById(params.model);
+    if (modelInfo?.family === 'fal') {
+        const falKey = getFalKey(params);
+        if (!falKey) throw new Error('Fal.ai API Key missing. Please add it in Settings.');
+        const imageField = modelInfo?.imageField || 'image_url';
+        const payload = { prompt: params.prompt || '' };
+        const imagesList = params.images_list?.length > 0 ? params.images_list : (params.image_url ? [params.image_url] : null);
+        if (imagesList) {
+            if (imageField === 'images_list') payload.images_list = imagesList;
+            else payload[imageField] = imagesList[0];
+        }
+        if (params.aspect_ratio) payload.image_size = arToImageSize(params.aspect_ratio);
+        const result = await falSubmitAndPoll(modelInfo.endpoint, payload, falKey, params.onRequestId, 60, 2000);
+        const imageUrl = result.images?.[0]?.url || result.data?.images?.[0]?.url;
+        return { ...result, url: imageUrl };
+    }
     const endpoint = modelInfo?.endpoint || params.model;
     const payload = {};
     if (params.prompt) payload.prompt = params.prompt;
@@ -85,6 +198,23 @@ export async function generateI2I(apiKey, params) {
 
 export async function generateVideo(apiKey, params) {
     const modelInfo = getVideoModelById(params.model);
+    if (modelInfo?.family === 'fal') {
+        const falKey = getFalKey(params);
+        if (!falKey) throw new Error('Fal.ai API Key missing. Please add it in Settings.');
+        const payload = {};
+        if (params.prompt) payload.prompt = params.prompt;
+        if (params.negative_prompt) payload.negative_prompt = params.negative_prompt;
+        if (params.aspect_ratio) payload.aspect_ratio = params.aspect_ratio;
+        if (params.duration) payload.duration = params.duration;
+        if (params.resolution) payload.resolution = params.resolution;
+        if (params.cfg_scale != null) payload.cfg_scale = params.cfg_scale;
+        if (params.generate_audio != null) payload.generate_audio = params.generate_audio;
+        if (params.safety_tolerance != null) payload.safety_tolerance = params.safety_tolerance;
+        if (params.seed && params.seed !== -1) payload.seed = params.seed;
+        const result = await falSubmitAndPoll(modelInfo.endpoint, payload, falKey, params.onRequestId, 900, 3000);
+        const videoUrl = result.video?.url || result.data?.video?.url;
+        return { ...result, url: videoUrl };
+    }
     const endpoint = modelInfo?.endpoint || params.model;
     const payload = {};
     if (params.prompt) payload.prompt = params.prompt;
@@ -99,6 +229,31 @@ export async function generateVideo(apiKey, params) {
 
 export async function generateI2V(apiKey, params) {
     const modelInfo = getI2VModelById(params.model);
+    if (modelInfo?.family === 'fal') {
+        const falKey = getFalKey(params);
+        if (!falKey) throw new Error('Fal.ai API Key missing. Please add it in Settings.');
+        const imageField = modelInfo?.imageField || 'image_url';
+        const payload = {};
+        if (params.prompt) payload.prompt = params.prompt;
+        if (params.negative_prompt) payload.negative_prompt = params.negative_prompt;
+        if (params.image_url) {
+            if (imageField === 'images_list') payload.images_list = [params.image_url];
+            else payload[imageField] = params.image_url;
+        }
+        if (params.aspect_ratio) payload.aspect_ratio = params.aspect_ratio;
+        if (params.duration) payload.duration = params.duration;
+        if (params.resolution) payload.resolution = params.resolution;
+        if (params.cfg_scale != null) payload.cfg_scale = params.cfg_scale;
+        if (params.quality) payload.quality = params.quality;
+        if (params.motion_mode) payload.motion_mode = params.motion_mode;
+        if (params.shot_type) payload.shot_type = params.shot_type;
+        if (params.generate_audio != null) payload.generate_audio = params.generate_audio;
+        if (params.safety_tolerance != null) payload.safety_tolerance = params.safety_tolerance;
+        if (params.seed && params.seed !== -1) payload.seed = params.seed;
+        const result = await falSubmitAndPoll(modelInfo.endpoint, payload, falKey, params.onRequestId, 900, 3000);
+        const videoUrl = result.video?.url || result.data?.video?.url;
+        return { ...result, url: videoUrl };
+    }
     const endpoint = modelInfo?.endpoint || params.model;
     const payload = {};
     if (params.prompt) payload.prompt = params.prompt;
@@ -129,6 +284,18 @@ export async function generateMarketingStudioAd(apiKey, params) {
 
 export async function processLipSync(apiKey, params) {
     const modelInfo = getLipSyncModelById(params.model);
+    if (modelInfo?.family === 'fal') {
+        const falKey = getFalKey(params);
+        if (!falKey) throw new Error('Fal.ai API Key missing. Please add it in Settings.');
+        const payload = {};
+        if (params.audio_url) payload.audio_url = params.audio_url;
+        if (params.image_url) payload.image_url = params.image_url;
+        if (params.video_url) payload.video_url = params.video_url;
+        if (params.sync_mode) payload.sync_mode = params.sync_mode;
+        const result = await falSubmitAndPoll(modelInfo.endpoint, payload, falKey, params.onRequestId, 900, 3000);
+        const videoUrl = result.video?.url || result.data?.video?.url;
+        return { ...result, url: videoUrl };
+    }
     const endpoint = modelInfo?.endpoint || params.model;
     const payload = {};
     if (params.audio_url) payload.audio_url = params.audio_url;
