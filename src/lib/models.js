@@ -2312,7 +2312,8 @@ export const t2iModels = [
       },
       "aspect_ratio": {
         "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
-        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"], "default": "1:1"
+        "enum": ["auto", "21:9", "16:9", "3:2", "4:3", "5:4", "1:1", "4:5", "3:4", "2:3", "9:16"],
+        "default": "auto"
       },
       "num_images": {
         "type": "int", "title": "Number of Images", "name": "num_images",
@@ -2320,15 +2321,15 @@ export const t2iModels = [
       },
       "resolution": {
         "type": "string", "title": "Resolution", "name": "resolution",
-        "enum": ["1K", "2K", "4K"], "default": "1K"
+        "enum": ["0.5K", "1K", "2K", "4K"], "default": "1K"
       },
       "safety_tolerance": {
         "type": "string", "title": "Safety Tolerance", "name": "safety_tolerance",
-        "enum": ["1", "2", "3", "4", "5", "6"], "default": "2"
+        "enum": ["1", "2", "3", "4", "5", "6"], "default": "4"
       },
       "output_format": {
         "type": "string", "title": "Output Format", "name": "output_format",
-        "enum": ["jpeg", "png"], "default": "jpeg"
+        "enum": ["jpeg", "png"], "default": "png"
       }
     }
   },
@@ -2343,9 +2344,13 @@ export const t2iModels = [
         "description": "Describe the image you want to generate.",
         "examples": ["A vibrant cyberpunk cityscape at night with neon reflections"]
       },
+      "negative_prompt": {
+        "type": "string", "title": "Negative Prompt", "name": "negative_prompt",
+        "description": "What to avoid in the generated image."
+      },
       "aspect_ratio": {
         "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
-        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"], "default": "1:1"
+        "enum": ["1:1", "16:9", "9:16", "4:3", "3:4", "21:9"], "default": "4:3"
       },
       "num_images": {
         "type": "int", "title": "Number of Images", "name": "num_images",
@@ -2357,7 +2362,7 @@ export const t2iModels = [
       },
       "guidance_scale": {
         "type": "float", "title": "Guidance Scale", "name": "guidance_scale",
-        "default": 4.0, "minValue": 1.0, "maxValue": 10.0, "step": 0.5
+        "default": 2.5, "minValue": 1.0, "maxValue": 10.0, "step": 0.5
       },
       "output_format": {
         "type": "string", "title": "Output Format", "name": "output_format",
@@ -2852,15 +2857,19 @@ export const t2vModels = [
       "prompt": { "type": "string", "title": "Prompt", "name": "prompt", "description": "Describe the video you want to generate." },
       "aspect_ratio": {
         "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
-        "enum": ["16:9", "9:16", "1:1", "4:3", "3:4", "21:9"], "default": "16:9"
+        "enum": ["auto", "16:9", "9:16", "1:1", "4:3", "3:4", "21:9"], "default": "auto"
       },
       "resolution": {
         "type": "string", "title": "Resolution", "name": "resolution",
-        "enum": ["480p", "720p"], "default": "720p"
+        "enum": ["480p", "720p", "1080p"], "default": "720p"
       },
       "duration": {
         "type": "int", "title": "Duration (seconds)", "name": "duration",
-        "enum": [5, 10], "default": 5
+        "enum": [4, 5, 6, 8, 10, 12, 15], "default": 5
+      },
+      "generate_audio": {
+        "type": "bool", "title": "Generate Audio", "name": "generate_audio",
+        "default": true
       }
     }
   },
@@ -2880,7 +2889,7 @@ export const t2vModels = [
       },
       "aspect_ratio": {
         "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
-        "enum": ["16:9", "9:16", "1:1", "auto"], "default": "16:9"
+        "enum": ["16:9", "9:16"], "default": "16:9"
       },
       "duration": {
         "type": "int", "title": "Duration (seconds)", "name": "duration",
@@ -2888,12 +2897,16 @@ export const t2vModels = [
       },
       "resolution": {
         "type": "string", "title": "Resolution", "name": "resolution",
-        "enum": ["720p", "1080p"], "default": "720p"
+        "enum": ["720p", "1080p", "4k"], "default": "720p"
       },
       "generate_audio": {
         "type": "bool", "title": "Generate Audio", "name": "generate_audio",
         "description": "Whether to generate native audio with the video.",
         "default": true
+      },
+      "safety_tolerance": {
+        "type": "string", "title": "Safety Tolerance", "name": "safety_tolerance",
+        "enum": ["1", "2", "3", "4", "5", "6"], "default": "4"
       }
     }
   },
@@ -2913,7 +2926,7 @@ export const t2vModels = [
       },
       "duration": {
         "type": "int", "title": "Duration (seconds)", "name": "duration",
-        "enum": [4, 8, 12], "default": 4
+        "enum": [4, 8, 12, 16, 20], "default": 4
       },
       "resolution": {
         "type": "string", "title": "Resolution", "name": "resolution",
@@ -2937,11 +2950,11 @@ export const t2vModels = [
       },
       "duration": {
         "type": "int", "title": "Duration (seconds)", "name": "duration",
-        "enum": [4, 8, 12], "default": 8
+        "enum": [4, 8, 12, 16, 20], "default": 8
       },
       "resolution": {
         "type": "string", "title": "Resolution", "name": "resolution",
-        "enum": ["720p", "1080p"], "default": "1080p"
+        "enum": ["720p", "1080p", "true_1080p"], "default": "1080p"
       }
     }
   }
@@ -8491,15 +8504,19 @@ export const i2vModels = [
       },
       "aspect_ratio": {
         "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
-        "enum": ["16:9", "9:16", "1:1", "4:3", "3:4", "21:9"], "default": "16:9"
+        "enum": ["auto", "16:9", "9:16", "1:1", "4:3", "3:4", "21:9"], "default": "auto"
       },
       "resolution": {
         "type": "string", "title": "Resolution", "name": "resolution",
-        "enum": ["480p", "720p"], "default": "720p"
+        "enum": ["480p", "720p", "1080p"], "default": "720p"
       },
       "duration": {
         "type": "int", "title": "Duration (seconds)", "name": "duration",
-        "enum": [5, 10], "default": 5
+        "enum": [4, 5, 6, 8, 10, 12, 15], "default": 5
+      },
+      "generate_audio": {
+        "type": "bool", "title": "Generate Audio", "name": "generate_audio",
+        "default": true
       }
     }
   },
@@ -8521,7 +8538,7 @@ export const i2vModels = [
       },
       "aspect_ratio": {
         "type": "string", "title": "Aspect Ratio", "name": "aspect_ratio",
-        "enum": ["16:9", "9:16", "auto"], "default": "auto"
+        "enum": ["auto", "16:9", "9:16"], "default": "auto"
       },
       "duration": {
         "type": "int", "title": "Duration (seconds)", "name": "duration",
@@ -8529,11 +8546,15 @@ export const i2vModels = [
       },
       "resolution": {
         "type": "string", "title": "Resolution", "name": "resolution",
-        "enum": ["720p", "1080p"], "default": "720p"
+        "enum": ["720p", "1080p", "4k"], "default": "720p"
       },
       "generate_audio": {
         "type": "bool", "title": "Generate Audio", "name": "generate_audio",
         "default": true
+      },
+      "safety_tolerance": {
+        "type": "string", "title": "Safety Tolerance", "name": "safety_tolerance",
+        "enum": ["1", "2", "3", "4", "5", "6"], "default": "4"
       }
     }
   },
@@ -8551,11 +8572,25 @@ export const i2vModels = [
       },
       "negative_prompt": {
         "type": "string", "title": "Negative Prompt", "name": "negative_prompt",
-        "description": "What to exclude from the video."
+        "description": "What to exclude from the video.",
+        "default": "blur, distort, and low quality"
       },
       "duration": {
         "type": "int", "title": "Duration (seconds)", "name": "duration",
         "enum": [5, 10], "default": 5
+      },
+      "cfg_scale": {
+        "type": "float", "title": "CFG Scale", "name": "cfg_scale",
+        "description": "Prompt adherence strength (0–1).",
+        "default": 0.5, "minValue": 0, "maxValue": 1.0, "step": 0.1
+      },
+      "shot_type": {
+        "type": "string", "title": "Shot Type", "name": "shot_type",
+        "enum": ["customize", "intelligent"], "default": "customize"
+      },
+      "generate_audio": {
+        "type": "bool", "title": "Generate Audio", "name": "generate_audio",
+        "default": true
       }
     }
   }

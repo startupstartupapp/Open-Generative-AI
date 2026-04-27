@@ -86,9 +86,11 @@ export class FalClient {
         };
         if (params.seed && params.seed !== -1) payload.seed = params.seed;
         if (params.image_url) payload.image_url = params.image_url;
+        if (params.negative_prompt) payload.negative_prompt = params.negative_prompt;
         if (params.num_inference_steps != null) payload.num_inference_steps = params.num_inference_steps;
         if (params.guidance_scale != null) payload.guidance_scale = params.guidance_scale;
         if (params.safety_tolerance != null) payload.safety_tolerance = params.safety_tolerance;
+        if (params.resolution) payload.resolution = params.resolution;
         if (params.style) payload.style = params.style;
         if (params.output_format) payload.output_format = params.output_format;
 
@@ -153,6 +155,7 @@ export class FalClient {
         if (params.resolution) payload.resolution = params.resolution;
         if (params.cfg_scale != null) payload.cfg_scale = params.cfg_scale;
         if (params.generate_audio != null) payload.generate_audio = params.generate_audio;
+        if (params.safety_tolerance != null) payload.safety_tolerance = params.safety_tolerance;
         if (params.seed && params.seed !== -1) payload.seed = params.seed;
 
         console.log('[Fal] generateVideo:', endpoint, payload);
@@ -191,6 +194,10 @@ export class FalClient {
         if (params.cfg_scale != null) payload.cfg_scale = params.cfg_scale;
         if (params.quality) payload.quality = params.quality;
         if (params.motion_mode) payload.motion_mode = params.motion_mode;
+        if (params.shot_type) payload.shot_type = params.shot_type;
+        if (params.generate_audio != null) payload.generate_audio = params.generate_audio;
+        if (params.safety_tolerance != null) payload.safety_tolerance = params.safety_tolerance;
+        if (params.seed && params.seed !== -1) payload.seed = params.seed;
 
         console.log('[Fal] generateI2V:', endpoint, payload);
         const submitData = await this._submit(endpoint, payload, falKey);
